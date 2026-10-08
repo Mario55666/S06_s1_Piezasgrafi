@@ -1,0 +1,4 @@
+Coloca aquí el aplicativo de la tarea 6: un index.html (y sus imágenes).
+Los estudiantes lo abren en https://aplicativos-idc.<tu-red>.ts.net/tarea-06/
+Para recibir resultados, al final del <body> agrega:
+  <script src="/envio-resultados.js"></script>
