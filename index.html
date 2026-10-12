@@ -226,6 +226,10 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--suave);padding:1
 .orden dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;margin:0}
 .orden dt{color:var(--idc-gris3)}
 .orden dd{margin:0;font-weight:600}
+.orden dl{position:relative;z-index:1;row-gap:9px}
+.orden dd .orden-note{display:block;margin-top:2px;font-family:var(--f-sans);font-size:13.5px;font-weight:400;line-height:1.45;color:#43535b}
+.orden-intro{position:relative;z-index:1;margin:0 0 12px;color:#43535b;font:14px/1.5 var(--f-sans)}
+.orden-pista{position:relative;z-index:1;margin:13px 0 0;padding:10px 12px;background:#fff4d6;border-left:4px solid var(--idc-amarillo);border-radius:6px;font:14px/1.5 var(--f-sans);color:#433512}
 .mancha{position:absolute;right:-20px;bottom:-26px;width:150px;height:110px;border-radius:50%;background:radial-gradient(circle at 40% 40%,rgba(230,0,126,.28),rgba(0,160,227,.18) 60%,transparent 70%);pointer-events:none}
 .steps{display:flex;flex-direction:column;gap:12px;margin-top:14px}
 .step{background:#fff;border:1.5px solid var(--borde);border-radius:var(--radio-sm);padding:14px 16px}
@@ -385,6 +389,35 @@ input.val{border-color:var(--verde-ok)}
 .howto{background:var(--panel);border:1.5px solid var(--idc-azul);border-radius:var(--radio-sm);padding:12px 16px;margin:12px 0}
 .howto b.t{display:block;font-family:var(--f-mono);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--idc-azul);margin-bottom:4px}
 .howto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:15px}
+.sketchbook-demo{position:relative;overflow:hidden;margin:12px 0 16px;padding:12px;border:1px solid #d8c69f;border-radius:10px;background:repeating-linear-gradient(0deg,rgba(52,82,104,.075) 0 1px,transparent 1px 24px),repeating-linear-gradient(90deg,rgba(52,82,104,.055) 0 1px,transparent 1px 24px),#fffdf5;box-shadow:2px 3px 0 #e8dcc2,5px 7px 0 rgba(77,61,39,.08)}
+.sketchbook-demo:before{content:"CUADERNO DE TALLER · TRAZO A LÁPIZ";display:block;margin:0 0 5px 5px;color:#59636a;font:700 10px/1.4 var(--f-mono);letter-spacing:.08em}
+.sketch-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(240px,.8fr);gap:14px;align-items:center}
+.sketchbook-demo svg{display:block;width:100%;height:auto;max-height:330px;overflow:visible}
+.sketch-order{padding:12px 13px;background:rgba(255,255,255,.82);border:1px solid #d7cba9;border-left:3px solid #ba7800;border-radius:7px;box-shadow:1px 2px 0 rgba(80,64,38,.1)}
+.sketch-order h5{margin:0 0 9px;font:700 13px/1.35 var(--f-mono);color:#4b4232}
+.sketch-order dl{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin:0}
+.sketch-order dl>div{min-width:0;border-bottom:1px dashed #c9bea2;padding:0 0 6px}
+.sketch-order dt{font:700 10px/1.3 var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:#64615a}
+.sketch-order dd{margin:2px 0 0;font:600 12px/1.4 var(--f-sans);color:#263b49;overflow-wrap:anywhere}
+.sketch-order .used-mount{grid-column:1/-1;border-bottom:0;background:#fff4d6;padding:7px 8px;border-radius:5px}
+.sketchbook-demo .pencil-stroke{fill:none;stroke:#34414b;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.sketchbook-demo.is-drawing .pencil-stroke{animation:pencil-draw 1.05s ease-out forwards}
+.sketchbook-demo.is-drawing .dim{animation-delay:.7s}.sketchbook-demo.is-drawing .grip-hatch{animation-delay:1.05s}
+.sketchbook-demo .sheet-edge{stroke-width:3}
+.sketchbook-demo .dim{stroke:#286d96;stroke-width:1.5;animation-delay:.7s}
+.sketchbook-demo .piece{stroke:#3f5e70;stroke-width:1.35;animation-duration:.55s}
+.sketchbook-demo .grip-hatch{stroke:#ba7800;stroke-width:1.25}
+.sketchbook-demo.is-drawing .pencil-text{animation:pencil-note .5s ease-out 2.7s forwards}
+.sketchbook-demo .pencil-text{font:700 13px var(--f-sans);fill:#263b49;opacity:0}
+.sketchbook-demo .pencil-label{font:600 11px var(--f-sans);fill:#4b5960;opacity:0}
+.sketchbook-demo.is-drawing .pencil-label{animation:pencil-note .35s ease-out 2.5s forwards}
+.sketchbook-demo .pencil-label.blue{fill:#075d87}.sketchbook-demo .pencil-label.gold{fill:#8a5a00}
+.sketchbook-demo .sketch-caption{margin:5px 3px 0;color:#394851;font-size:13px;line-height:1.45}
+@keyframes pencil-draw{to{stroke-dashoffset:0}}
+@keyframes pencil-note{to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.sketchbook-demo .pencil-stroke{animation:none;stroke-dashoffset:0}.sketchbook-demo .pencil-text,.sketchbook-demo .pencil-label{animation:none;opacity:1}}
+@media(max-width:760px){.sketch-layout{grid-template-columns:1fr}.sketchbook-demo svg{max-height:300px}}
+@media(max-width:440px){.sketch-order dl{grid-template-columns:1fr}.sketch-order .used-mount{grid-column:auto}}
 .parts{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 12px;font-family:var(--f-mono);font-size:14px}
 .parts span{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--suave);border-radius:6px;padding:6px 8px}
 .parts small{font-family:var(--f-sans);font-size:11.5px;color:var(--idc-gris1)}
@@ -813,22 +846,72 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <div class="st-head"><span class="st-num">3</span><div><p class="eyebrow">Estación 3 · Simulador de contexto · Pista 3</p><h2>La orden de trabajo manchada</h2></div></div>
   <div class="proc" data-stage="preprensa" data-note="Imposición y cálculo de papel. Se hace en preprensa y al presupuestar, <b>antes</b> de grabar planchas e imprimir: define cuántas piezas entran en cada pliego y cuánto papel hay que comprar. Si este cálculo falla, el papel no alcanza en la máquina."></div>
   <p>Encontraste la orden del encargo anterior. Alguien derramó tinta encima y borró los cálculos. Reconstrúyelos en 5 pasos: así descubrirás por qué se acabó el papel.</p>
-  <div class="howto"><b class="t">Antes de calcular: prepara tus herramientas</b><ol>
-    <li><b>📝 Papel y lápiz:</b> dibuja el pliego como un rectángulo, anota sus medidas (100 × 70 cm) y pinta la franja de la pinza en un lado largo. Encima irás dibujando los volantes. Cada paso tiene un botón <b>📝 Esquema en papel</b> que te muestra qué dibujar.</li>
-    <li><b>📊 Hoja de cálculo:</b> abre Excel o Google Sheets. Cada paso tiene un botón <b>📊 Fórmula de Excel</b> con la fórmula lista para copiar y pegar. También puedes descargar la plantilla con todo el cálculo.</li>
+  <div class="howto"><b class="t">Antes de calcular: prepara tus herramientas</b>
+    <figure class="sketchbook-demo">
+      <div class="sketch-layout">
+      <svg viewBox="0 0 520 286" role="img" aria-labelledby="sketchTitle sketchDesc">
+        <title id="sketchTitle">Boceto a lápiz del plano de imposición</title>
+        <desc id="sketchDesc">Se traza el pliego con los datos de la orden 0612, se marca la pinza y se muestran nueve volantes girados como alternativa de comparación. La orden original dice pieza derecha, sin girar.</desc>
+        <path pathLength="1" class="pencil-stroke sheet-edge" d="M99 47 Q101 44 106 46 L408 45 Q412 47 411 52 L409 239 Q407 242 402 241 L102 243 Q98 241 99 237 Z"/>
+        <path pathLength="1" class="pencil-stroke dim" d="M108 34 Q250 31 401 34 M108 31 l-8 3 8 4 M401 31 l8 3-8 4"/>
+        <path pathLength="1" class="pencil-stroke dim" d="M84 53 Q81 137 84 231 M81 53 l3-8 4 8 M81 231 l3 8 4-8"/>
+        <text x="254" y="25" text-anchor="middle" class="pencil-label blue">100 cm · lado largo</text>
+        <text x="68" y="142" text-anchor="middle" transform="rotate(-90 68 142)" class="pencil-label blue">70 cm total</text>
+        <text x="421" y="133" text-anchor="middle" transform="rotate(-90 421 133)" class="pencil-label blue">68.5 cm útiles</text>
+        <path pathLength="1" class="pencil-stroke dim" d="M433 53 Q436 137 433 220 M430 53 l3-8 4 8 M430 220 l3 8 4-8"/>
+        <g class="pieces">
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.3s" d="M111 68 l85-1 1 46-86 1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.42s" d="M201 67 l85 1-1 47-84-1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.54s" d="M292 68 l84-1 1 47-85-1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.66s" d="M110 119 l86-1-1 46-85 1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.78s" d="M202 119 l83 1 1 45-85 1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:1.9s" d="M292 118 l85 1-1 47-84-1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:2.02s" d="M111 170 l85-1 1 45-86 1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:2.14s" d="M201 169 l85 1-1 46-84-1z"/>
+          <path pathLength="1" class="pencil-stroke piece" style="animation-delay:2.26s" d="M292 170 l84-1 1 46-85 1z"/>
+        </g>
+        <text x="153" y="98" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="244" y="98" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="334" y="98" text-anchor="middle" class="pencil-label">pieza ↻</text>
+        <text x="153" y="149" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="244" y="149" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="334" y="149" text-anchor="middle" class="pencil-label">pieza ↻</text>
+        <text x="153" y="199" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="244" y="199" text-anchor="middle" class="pencil-label">pieza ↻</text><text x="334" y="199" text-anchor="middle" class="pencil-label">pieza ↻</text>
+        <path pathLength="1" class="pencil-stroke grip-hatch" d="M103 222 l17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18 m4-18 17 18"/>
+        <text x="255" y="260" text-anchor="middle" class="pencil-label gold">PINZA · 1.5 cm · reservar fuera del área útil</text>
+        <text x="476" y="197" text-anchor="middle" class="pencil-text">9 piezas</text><text x="476" y="214" text-anchor="middle" class="pencil-text">por pliego</text>
+        <g transform="translate(454 62) rotate(28)" aria-hidden="true"><path d="M0 0 l8-8 6 6-8 8z" fill="#e6bd58" stroke="#4d4b46" stroke-width="1.3"/><path d="M0 0l-3 9 9-3" fill="#e8d5b1" stroke="#4d4b46" stroke-width="1.3"/><path d="M8-8l3-3 6 6-3 3" fill="#d18e36" stroke="#4d4b46" stroke-width="1.3"/></g>
+      </svg>
+      <aside class="sketch-order" aria-label="Datos de la orden de trabajo 0612 en el boceto">
+        <h5>📝 Anotaciones · Orden 0612</h5>
+        <dl>
+          <div><dt>Pieza</dt><dd>Volante feria gastronómica, 4/1</dd></div>
+          <div><dt>Formato al corte</dt><dd>21 × 29.7 cm (A4)</dd></div>
+          <div><dt>Sangrado</dt><dd>3 mm por lado</dd></div>
+          <div><dt>Pliego</dt><dd>70 × 100 cm</dd></div>
+          <div><dt>Pinza</dt><dd>1.5 cm en el lado largo</dd></div>
+          <div><dt>Tiraje</dt><dd>3 000 ejemplares</dd></div>
+          <div><dt>Demasía</dt><dd>5 %</dd></div>
+          <div class="used-mount"><dt>Montaje usado en la orden</dt><dd>“Pieza derecha, sin girar”</dd></div>
+        </dl>
+      </aside>
+      </div>
+      <figcaption class="sketch-caption">El trazo muestra una alternativa girada para comparar; la orden original especifica “Pieza derecha, sin girar”. Dibuja ambos montajes y contrasta cuántas piezas completas caben. El esquema es orientativo, no está a escala.</figcaption>
+    </figure>
+    <ol>
+    <li><b>📝 Papel y lápiz:</b> dibuja el pliego como un rectángulo, anota sus medidas (100 × 70 cm) y marca la pinza de 1.5 cm. Luego prueba la orientación de los volantes y cuenta solo las piezas completas. Cada paso incluye un botón <b>📝 Esquema en papel</b> con una guía.</li>
+    <li><b>📊 Hoja de cálculo:</b> abre Excel o Google Sheets. La plantilla incluye fórmulas y una segunda hoja con un plano de imposición de ejemplo para ver cómo dibujar las piezas sobre el pliego.</li>
     <li>Escribe tu resultado en cada paso y pulsa <b>Comprobar</b>. Puedes consultar y responder los cinco pasos desde el inicio.</li>
-  </ol><div class="row"><button class="btn btn-outline btn-sm" type="button" data-xlsx="xlsxMsg3">⬇ Plantilla Excel (.xlsx)</button><span class="save-state" id="xlsxMsg3" aria-live="polite"></span></div></div>
+    </ol><div class="row"><button class="btn btn-outline btn-sm" type="button" data-xlsx="xlsxMsg3">⬇ Excel: cálculos + plano de ejemplo</button><span class="save-state" id="xlsxMsg3" aria-live="polite"></span></div></div>
   <div class="orden" id="orden0612">
     <h4>Litografía Kolb · Orden de trabajo 0612</h4>
+    <p class="orden-intro">Esta orden reúne las especificaciones que preprensa debe interpretar antes de cotizar y montar el trabajo. Cada dato cambia el tamaño útil, la cantidad por pliego o la preparación de la prensa.</p>
     <dl>
-      <dt>Pieza</dt><dd>Volante feria gastronómica, 4/1</dd>
-      <dt>Formato al corte</dt><dd>21 × 29.7 cm (A4)</dd>
-      <dt>Sangrado</dt><dd>3 mm por lado</dd>
-      <dt>Pliego</dt><dd>70 × 100 cm</dd>
-      <dt>Pinza</dt><dd>1.5 cm en el lado largo</dd>
-      <dt>Tiraje</dt><dd>3 000 ejemplares · demasía 5 %</dd>
-      <dt>Montaje usado</dt><dd>“Pieza derecha, sin girar”</dd>
+      <dt>Pieza</dt><dd>Volante feria gastronómica, 4/1<span class="orden-note"><b>Qué indica:</b> se imprime a cuatro tintas por el frente y una por el dorso. En la preparación de planchas, cuenta las tintas de ambas caras según el sistema descrito en el taller.</span></dd>
+      <dt>Formato al corte</dt><dd>21 × 29.7 cm (A4)<span class="orden-note"><b>Qué indica:</b> estas son las dimensiones finales después de guillotinar. Usa el ancho y el alto al corte como punto de partida para preparar el arte.</span></dd>
+      <dt>Sangrado</dt><dd>3 mm por lado<span class="orden-note"><b>Cómo aplicarlo:</b> el color se prolonga 3 mm por fuera de cada borde de corte. Para calcular el espacio de montaje, convierte 3 mm a 0.3 cm y suma esa extensión en ambos lados de cada dimensión: el espacio ocupado es 21.6 × 30.3 cm.</span></dd>
+      <dt>Pliego</dt><dd>70 × 100 cm<span class="orden-note"><b>Cómo dibujarlo:</b> representa el papel como un rectángulo de 100 cm de largo por 70 cm de corto. Mantén las unidades en centímetros durante el cálculo.</span></dd>
+      <dt>Pinza</dt><dd>1.5 cm en el lado largo<span class="orden-note"><b>Qué debes reservar:</b> marca una franja de 1.5 cm que recorre un borde largo del pliego. Esa zona sujeta el papel en la prensa y no cuenta como superficie imprimible; réstala del lado corto para obtener el área útil.</span></dd>
+      <dt>Tiraje</dt><dd>3 000 ejemplares · demasía 5 %<span class="orden-note"><b>Cómo planificarlo:</b> primero calcula los pliegos necesarios para producir los 3 000 volantes con la orientación elegida. Después agrega el 5 % de demasía para cubrir pruebas, ajustes y posibles mermas, y redondea hacia arriba a pliegos enteros.</span></dd>
+      <dt>Montaje usado</dt><dd>“Pieza derecha, sin girar”<span class="orden-note"><b>Qué debes investigar:</b> la orden dice que el volante se colocó sin rotarlo. Dibuja ese montaje y compáralo con la alternativa girada 90°. Cuenta únicamente piezas completas y relaciona la diferencia con el papel consumido.</span></dd>
     </dl>
+    <p class="orden-pista"><b>Conecta los datos:</b> formato al corte + sangrado determina cuánto espacio ocupa cada volante; pliego − pinza determina el área utilizable; orientación determina cuántos volantes caben; tiraje + demasía determina cuántos pliegos hay que solicitar.</p>
     <span class="mancha" aria-hidden="true"></span>
   </div>
   <div class="steps" id="simSteps"></div>
@@ -920,8 +1003,8 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   </table></div>
 
   <h3>📊 Tu hoja de cálculo para los encargos</h3>
-  <p>Descarga la plantilla: trae los 3 encargos con todas las fórmulas. Escribe tus datos en las filas 4 a 13 (el encargo 3 trae datos de ejemplo para que los cambies) y los resultados se calculan solos. Funciona en Excel y en Google Sheets (Archivo › Importar).</p>
-  <div class="row"><button class="btn btn-primary" type="button" data-xlsx="xlsxMsg5">⬇ Plantilla Excel (.xlsx)</button><span class="save-state" id="xlsxMsg5" aria-live="polite"></span></div>
+  <p>La plantilla incluye dos hojas: <b>Encargos S06</b>, con fórmulas para los tres trabajos, y <b>Esquema de pliego</b>, con una guía dibujada del acomodo 3 × 3, la pinza, el área útil y los sobrantes. Escribe tus datos en las filas 4 a 13 de la primera hoja; el encargo 3 trae valores de ejemplo para que los reemplaces. Funciona en Excel y Google Sheets (Archivo › Importar).</p>
+  <div class="row"><button class="btn btn-primary" type="button" data-xlsx="xlsxMsg5">⬇ Descargar Excel + plano de ejemplo</button><span class="save-state" id="xlsxMsg5" aria-live="polite"></span></div>
   <p style="margin-top:12px">Si prefieres armarla tú, estas son las fórmulas, para la columna B (Excel en español):</p>
   <div class="tbl xl-tbl"><table>
     <thead><tr><th>Fila</th><th>Dato</th><th>Fórmula</th></tr></thead>
@@ -2554,7 +2637,36 @@ window.APP = (function(){
       });
       ws["!ref"] = "A1:E26";
       ws["!cols"] = [{wch:36}, {wch:22}, {wch:22}, {wch:22}, {wch:40}];
-      var wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, "Encargos S06");
+      var planWs = {};
+      function putPlan(ref, cell){ planWs[ref] = cell; }
+      function planText(ref, value){ putPlan(ref, {t:"s", v:value}); }
+      planText("A1", "CUADERNO DE TALLER · PLANO DE IMPOSICIÓN");
+      planText("A2", "Guía visual para dibujar el pliego y ubicar piezas. Ejemplo del volante A4 de la orden 0612; no está a escala.");
+      [["A4","PLIEGO"],["B4","100 × 70 cm"],["C4","Largo × corto"],
+       ["A5","PINZA"],["B5","1.5 cm"],["C5","Franja no imprimible"],
+       ["A6","ÁREA ÚTIL"],["B6","100 × 68.5 cm"],["C6","70 − 1.5 cm de pinza"],
+       ["A7","PIEZA + SANGRADO"],["B7","21.6 × 30.3 cm"],["C7","21 × 29.7 cm + 0.3 cm por lado"],
+       ["A8","ACOMODO DE EJEMPLO"],["B8","Girado 90°"],["C8","3 columnas × 3 filas = 9 piezas"],
+       ["A9","SOBRANTE APROX."],["B9","9.1 × 3.7 cm"],["C9","Compara las dos orientaciones"]].forEach(function(row){ planText(row[0], row[1]); });
+      planText("A11", "VISTA SUPERIOR · LADO LARGO 100 cm →");
+      var pieceCell = function(n){ return "┌─────────────────┐\n│   PIEZA " + n + "   ↻   │\n│   30.3 × 21.6 cm  │\n└─────────────────┘"; };
+      var colsPlan = ["A","B","C"];
+      for (var rowPlan=0;rowPlan<3;rowPlan++) for (var colPlan=0;colPlan<3;colPlan++) {
+        planText(colsPlan[colPlan] + (12+rowPlan), pieceCell(rowPlan*3+colPlan+1));
+      }
+      planText("D12", "9.1 cm aprox.\nsin ocupar en el lado largo");
+      planText("D13", "3.7 cm aprox.\nsin ocupar en el área útil");
+      planText("D14", "Cuenta solo piezas completas.\nComprueba el dibujo con tus medidas.");
+      planText("A15", "PINZA · reserva una franja de 1.5 cm a lo largo del pliego; no la cuentes como área imprimible.");
+      planText("A16", "Para tu propio encargo: dibuja el pliego, descuenta pinza, añade sangrado a la pieza, prueba ambas orientaciones y registra tus resultados en la hoja Encargos S06.");
+      planWs["!ref"] = "A1:D16";
+      planWs["!cols"] = [{wch:24}, {wch:24}, {wch:24}, {wch:34}];
+      planWs["!rows"] = [{hpt:28},{hpt:34},{hpt:8},{hpt:24},{hpt:24},{hpt:24},{hpt:24},{hpt:24},{hpt:24},{hpt:8},{hpt:24},{hpt:52},{hpt:52},{hpt:52},{hpt:30},{hpt:40}];
+      planWs["!merges"] = [
+        {s:{r:0,c:0},e:{r:0,c:3}}, {s:{r:1,c:0},e:{r:1,c:3}},
+        {s:{r:10,c:0},e:{r:10,c:3}}, {s:{r:14,c:0},e:{r:14,c:3}}, {s:{r:15,c:0},e:{r:15,c:3}}
+      ];
+      var wb = X.utils.book_new(); X.utils.book_append_sheet(wb, ws, "Encargos S06"); X.utils.book_append_sheet(wb, planWs, "Esquema de pliego");
       var buf = X.write(wb, {bookType:"xlsx", type:"array"});
       saveFile("S06_Aprovechamiento_Pliego.xlsx", new Blob([buf], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", msgEl);
     }, function(){ msgEl.textContent = "No se pudo preparar la plantilla (revisa tu conexión). Usa la tabla de fórmulas de esta página."; });
@@ -3220,8 +3332,24 @@ window.APP = (function(){
     });
   }
 
+  function initSketchbook(){
+    var demo = document.querySelector(".sketchbook-demo");
+    if (!demo) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      demo.classList.add("is-drawing"); return;
+    }
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting) { demo.classList.add("is-drawing"); observer.disconnect(); }
+        });
+      }, {threshold:.2});
+      observer.observe(demo);
+    } else demo.classList.add("is-drawing");
+  }
+
   function init(){
-    initStart(); initS1(); initS2(); initA(); initB(); initPress(); initS3(); initS4(); initS5(); initModals(); initReport(); initAyudas(); initLearningScaffolds(); offerResume();
+    initStart(); initS1(); initS2(); initA(); initB(); initPress(); initS3(); initS4(); initS5(); initModals(); initReport(); initAyudas(); initLearningScaffolds(); initSketchbook(); offerResume();
     updateHud(); checkRank(); renderFlow();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
