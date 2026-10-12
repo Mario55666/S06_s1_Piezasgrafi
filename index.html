@@ -333,6 +333,23 @@ input.val{border-color:var(--verde-ok)}
 .save-state{font-family:var(--f-mono);font-size:12.5px;color:var(--idc-gris1)}
 .informe{background:var(--panel);border:2px solid var(--idc-azul);border-radius:var(--radio);padding:18px 20px;margin-top:18px}
 .informe h3{margin-top:0}
+.informe.cierre{position:relative;isolation:isolate;overflow:hidden;background:linear-gradient(135deg,#07395b 0%,#075484 62%,#0072b9 100%);border:0;border-radius:22px;padding:clamp(20px,4vw,34px);margin:32px 0 8px;color:#fff;box-shadow:0 18px 44px rgba(0,55,91,.25)}
+.informe.cierre:before{content:"";position:absolute;z-index:-1;width:260px;height:260px;right:-75px;top:-118px;border:34px solid rgba(243,161,0,.2);border-radius:50%;box-shadow:0 0 0 28px rgba(255,255,255,.055)}
+.informe.cierre:after{content:"";position:absolute;z-index:-1;width:120px;height:120px;right:115px;bottom:-92px;border:20px solid rgba(255,255,255,.08);border-radius:50%}
+.cierre-kicker{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.45);border-radius:999px;padding:6px 11px;color:#fff4cc;background:rgba(0,0,0,.12);font:700 12px/1.2 var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.informe.cierre h3{font-size:clamp(23px,3vw,32px);line-height:1.2;margin:13px 0 8px;color:#fff}
+.informe.cierre>p{max-width:68ch;color:rgba(255,255,255,.9);line-height:1.6}
+.informe.cierre .kpis div{background:#fff;border:1px solid rgba(255,255,255,.55);border-radius:13px;padding:14px 15px;box-shadow:0 5px 16px rgba(0,0,0,.12)}
+.informe.cierre .kpis dt{color:#31536a;font-weight:700}
+.informe.cierre .kpis dd{color:#07395b;font-size:clamp(21px,3vw,28px)}
+.informe.cierre .row{margin-top:16px}
+.informe.cierre #pdfBtn{background:#fff;color:#06456e;border:2px solid #fff;font-weight:800}
+.informe.cierre #pdfBtn:hover{background:#eaf6fc}
+.informe.cierre #mdBtn{background:#f3a100;color:#352400;border:2px solid #ffd36e;font-weight:800}
+.informe.cierre #mdBtn:hover{background:#ffca4b}
+.informe.cierre #dlMsg{color:#fff4cc}
+.cierre-note{display:flex;gap:10px;align-items:flex-start;margin-top:15px;padding:11px 13px;border-radius:10px;background:rgba(0,0,0,.18);color:#fff;font-size:14px;line-height:1.5}
+@media(max-width:560px){.informe.cierre .row{align-items:stretch}.informe.cierre .row .btn{width:100%}.informe.cierre .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
 .kpis div{background:var(--bg);border-radius:var(--radio-sm);padding:10px 12px}
 .kpis dt{font-family:var(--f-mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--idc-gris1)}
@@ -987,17 +1004,6 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
     <div class="row"><button class="btn btn-primary btn-sm" type="button" id="printBtn">🖨️ Imprimir constancia</button><span style="font-size:13px;color:var(--idc-gris1)">Si la impresión no se abre en esta vista, toma una captura de pantalla de la constancia.</span></div>
   </div>
 
-  <div class="informe" id="informe">
-    <h3>📊 Tu informe de desempeño</h3>
-    <p style="font-size:15px">Resume tu puntaje, tus estaciones, tus fortalezas y lo que conviene reforzar. Puedes descargarlo en cualquier momento: si aún no terminas, muestra tu avance hasta ahora.</p>
-    <dl class="kpis" id="kpis"></dl>
-    <div class="row">
-      <button class="btn btn-primary" type="button" id="pdfBtn">⬇ Informe PDF</button>
-      <button class="btn btn-amarillo" type="button" id="mdBtn">⬇ Informe Markdown</button>
-    </div>
-    <p class="save-state" id="dlMsg" aria-live="polite" style="margin-top:8px"></p>
-  </div>
-
   <h3>Entregables</h3>
   <div class="tbl"><table>
     <thead><tr><th>Entregable</th><th>Nombre del archivo</th></tr></thead>
@@ -1018,6 +1024,19 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
       <tr><td><b>Nomenclatura y entrega</b></td><td>Ambos archivos con el nombre correcto y a tiempo.</td><td>Un nombre con error.</td><td>Nombres incorrectos o entrega tardía.</td></tr>
     </tbody>
   </table></div>
+
+  <section class="informe cierre" id="informe" aria-labelledby="informeTitle">
+    <span class="cierre-kicker">🏁 Cierre del procedimiento · paso final</span>
+    <h3 id="informeTitle">Tu recorrido queda registrado</h3>
+    <p>Revisa tu puntaje, las estaciones completadas, tus fortalezas y lo que puedes reforzar. Este informe refleja tu aprendizaje en el caso del pliego fantasma.</p>
+    <dl class="kpis" id="kpis" aria-label="Resumen del desempeño"></dl>
+    <div class="cierre-note"><span aria-hidden="true">💡</span><span><b>¿Aún tienes actividades pendientes?</b> Puedes descargar el avance actual en cualquier momento. El informe se actualiza mientras resuelves nuevos retos.</span></div>
+    <div class="row" aria-label="Descargar informe de desempeño">
+      <button class="btn btn-primary" type="button" id="pdfBtn">⬇ Descargar informe PDF</button>
+      <button class="btn btn-amarillo" type="button" id="mdBtn">⬇ Descargar informe Markdown</button>
+    </div>
+    <p class="save-state" id="dlMsg" aria-live="polite" style="margin-top:8px"></p>
+  </section>
   </div>
 </section>
 
