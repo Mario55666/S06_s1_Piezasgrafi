@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
 <style>
-/* Layout: expediente de imprenta en estaciones bloqueadas; navbar azul IDC con libreta de código y puntaje; columna única de lectura */
+/* Layout: expediente de imprenta en estaciones abiertas (CANDADOS = false en el script); navbar azul IDC con libreta de código y puntaje; columna única de lectura */
 :root{
   --idc-azul:#0072b9; --idc-azul-osc:#00517f; --idc-amarillo:#f3a100; --idc-gris1:#555553; --idc-gris2:#545452; --idc-gris3:#868686;
   --bg:#f6f5f2; --panel:#ffffff; --texto:#2b2b2a; --borde:#e2e0da; --suave:#eef5fb;
@@ -63,6 +63,19 @@ button{font:inherit;cursor:pointer}
 .lead{font-size:18.5px;max-width:66ch}
 .objetivo{background:var(--panel);border:1px solid var(--borde);border-left:5px solid var(--idc-azul);border-radius:var(--radio-sm);padding:16px 18px;margin-top:16px;font-size:15.5px}
 .objetivo b{color:var(--idc-azul-osc)}
+.learning-key{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0 4px}
+.learning-key>div{border-radius:12px;padding:13px 15px;line-height:1.5}
+.learning-key .eval-key{background:#fff4d6;border:2px solid #d98c00;color:#3a2b0b}
+.learning-key .support-key{background:#eaf5fb;border:2px solid #0072b9;color:#12344a}
+.learning-key b{display:block;margin-bottom:3px}
+.st-memory{display:flex;gap:10px;align-items:flex-start;background:#f1f7fb;border-left:4px solid var(--idc-azul);border-radius:8px;padding:11px 14px;margin:14px 0;color:#254055;line-height:1.5}
+.st-memory b{color:var(--idc-azul-osc);white-space:nowrap}
+.eval-marker,.support-marker{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 9px;font:700 11px/1.3 var(--f-mono);letter-spacing:.03em;text-transform:uppercase}
+.eval-marker{background:#fff0c5;border:1px solid #d98c00;color:#623e00}
+.support-marker{background:#e7f3fb;border:1px solid #79b4d8;color:#064e77}
+.ans .eval-marker{flex:0 0 auto;margin-bottom:2px}
+.howto>.support-marker,.guide>.support-marker,.clue>.support-marker{margin-bottom:8px}
+.ans.scored{background:#fffaf0;border:1px solid #e4d5ad;border-radius:12px;padding:13px;box-shadow:inset 4px 0 #f3a100}
 
 /* estaciones */
 section.st{padding-block:40px;border-top:1px solid var(--borde);position:relative;scroll-margin-top:110px}
@@ -71,11 +84,6 @@ section.st{padding-block:40px;border-top:1px solid var(--borde);position:relativ
 .st-num.apoyo{background:var(--idc-gris1)}
 .st.done .st-num{background:var(--verde-ok)}
 .st-head>div{min-width:0}
-.locked{position:relative}
-.locked>.st-body{filter:blur(3px);opacity:.35;pointer-events:none;user-select:none;max-height:340px;overflow:hidden}
-.lockmsg{display:none}
-.locked .lockmsg{display:flex;position:absolute;inset:110px 0 auto 0;margin:auto;max-width:440px;background:var(--panel);border:2px solid var(--idc-gris3);border-radius:var(--radio);padding:16px 18px;gap:12px;align-items:center;z-index:2;box-shadow:0 8px 30px rgba(0,0,0,.12)}
-.lockmsg .ic{font-size:26px}
 .card{background:var(--panel);border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px}
 .note-story{background:#fffdf6;border:1px solid #eadfbf;border-radius:var(--radio-sm);padding:18px 20px;font-size:16.5px;position:relative}
 .note-story::before{content:"";position:absolute;top:-1px;left:22px;width:70px;height:6px;background:var(--idc-amarillo);border-radius:0 0 4px 4px}
@@ -209,6 +217,8 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--suave);padding:1
 .fig svg{display:block;width:100%;min-width:520px;height:auto}
 .fig text{font-family:var(--f-mono);font-size:12px;fill:var(--texto)}
 .fig .lm{fill:var(--idc-gris3)}
+#offsetSvg .motion-path{fill:none;stroke:none}
+#offsetSvg .moving{filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
 
 /* orden de trabajo */
 .orden{background:#fff;border:2px solid var(--idc-gris1);border-radius:var(--radio-sm);padding:16px 18px;font-family:var(--f-mono);font-size:14.5px;position:relative;overflow:hidden}
@@ -223,8 +233,6 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--suave);padding:1
 .step .sh{display:flex;gap:10px;align-items:center;font-weight:700}
 .step .sh i{font-style:normal;width:30px;height:30px;border-radius:50%;background:var(--idc-azul);color:#fff;display:grid;place-items:center;font-family:var(--f-mono);font-size:14px;flex-shrink:0}
 .step.done .sh i{background:var(--verde-ok)}
-.step.wait{opacity:.5}
-.step.wait .ans{display:none}
 .formula{font-family:var(--f-mono);font-size:13.5px;background:var(--suave);padding:8px 10px;border-radius:6px;margin:8px 0;overflow-x:auto;white-space:pre}
 .ans{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-top:8px}
 .ans>div{flex:1 1 150px;min-width:0}
@@ -257,7 +265,7 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--suave);padding:1
 .dial input.g{border-color:#5fd08d}
 .dial input.b{border-color:#e7b866}
 .safe .fb{width:100%;text-align:left;color:var(--texto)}
-.reveal{display:none}
+.reveal{display:block}
 .reveal.on{display:block}
 
 /* cierre */
@@ -295,12 +303,22 @@ code{font-family:var(--f-mono);font-size:.88em;background:var(--suave);padding:1
 .fab{width:52px;height:52px;border-radius:50%;border:0;background:var(--idc-azul);color:#fff;font-size:22px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
 .fab:hover{background:var(--idc-azul-osc)}
 
-/* toast + chispas */
+/* toast + celebracion de aciertos */
 .toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(30px);background:var(--idc-gris2);color:#fff;padding:12px 18px;border-radius:12px;z-index:90;max-width:min(560px,calc(100vw - 32px));opacity:0;transition:all .35s;pointer-events:none;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast b{color:var(--idc-amarillo)}
 .spark{position:fixed;width:8px;height:8px;border-radius:2px;pointer-events:none;z-index:95;animation:spark .9s ease-out forwards}
 @keyframes spark{to{transform:translate(var(--dx),var(--dy)) rotate(260deg);opacity:0}}
+.toast.success{background:#075f43;border:2px solid #8de3b5;font-size:17px;font-weight:700;box-shadow:0 10px 32px rgba(0,95,67,.42)}
+.toast.success b{color:#ffe16a}
+.firework{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:.5vmin;min-width:4px;aspect-ratio:1;background:radial-gradient(circle,#fff 0 26%,#ffe16a 28% 52%,transparent 67%);border-radius:50%;pointer-events:none;z-index:100;filter:drop-shadow(0 0 8px rgba(255,210,60,.9))}
+.firework:before,.firework:after{content:"";position:absolute;inset:-9px;border:2px solid rgba(255,225,106,.9);border-radius:50%;animation:fire-ring .8s ease-out forwards}
+.firework:after{inset:-18px;border-color:rgba(0,154,220,.85);animation-delay:.08s}
+.firework i{position:absolute;left:50%;top:50%;width:6px;height:12px;border-radius:5px;background:var(--fire-color);box-shadow:0 0 10px var(--fire-color),0 0 18px rgba(255,255,255,.6);transform:translate(-50%,-50%) rotate(var(--fire-angle)) translateY(0) scale(.3);animation:fire-particle .95s cubic-bezier(.12,.72,.2,1) forwards;animation-delay:var(--fire-delay)}
+@keyframes fire-particle{0%{opacity:1;transform:translate(-50%,-50%) rotate(var(--fire-angle)) translateY(0) scale(.35)}68%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--fire-angle)) translateY(var(--fire-distance)) scale(.05)}}
+@keyframes fire-ring{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(2.3)}}
+@media (max-width:600px){.learning-key{grid-template-columns:1fr}.st-memory{display:block}.st-memory b{display:block;margin-bottom:3px}}
+@media (prefers-reduced-motion:reduce){.firework,.firework:before,.firework:after,.firework i{animation:none!important}.firework{opacity:.9}.firework:before,.firework:after{display:none}.firework i{opacity:0}}
 .levelup{background:var(--idc-amarillo);color:#3a2600;border-radius:var(--radio);padding:14px 18px;margin-top:14px;font-weight:600;display:none}
 .levelup.on{display:block}
 .st-done{display:none;margin-top:16px;background:var(--verde-ok-bg);border-radius:var(--radio-sm);padding:14px 16px;border:1.5px solid var(--verde-ok)}
@@ -406,6 +424,50 @@ input.val{border-color:var(--verde-ok)}
 .xl-row .xl-l{grid-column:1/-1;font-weight:600;font-size:14.5px}
 .xl-row code{font-size:14px;word-break:break-all;background:#fff;padding:6px 8px;border:1px solid var(--borde)}
 .xl-tbl td code{white-space:nowrap}
+
+/* ---- retroalimentación asistida: consulta, citas y reflexión guiada ---- */
+.aviso-abierto{background:var(--verde-ok-bg);border:1.5px solid var(--verde-ok);border-radius:var(--radio-sm);padding:12px 16px;margin-top:14px;font-size:15.5px}
+.aviso-abierto b{color:var(--verde-ok)}
+.consulta{margin-top:10px;padding:10px 12px;background:#fff;border:1.5px dashed var(--idc-azul);border-radius:var(--radio-sm);font-size:14.5px;line-height:1.65}
+.consulta>b{color:var(--idc-azul-osc);font-family:var(--f-mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:4px}
+a.ref{color:var(--idc-azul-osc);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px;font-weight:600;cursor:pointer}
+a.ref:hover{color:#7a4a00;background:#fff4d6}
+a.ref::after{content:" ↗";font-size:11px}
+a.ref.gl::after{content:" 📖";font-size:11px}
+.cita{margin:10px 0;padding:12px 14px;background:#fffdf6;border-left:5px solid var(--idc-amarillo);border-radius:var(--radio-sm);font-size:15.5px}
+.cita b{color:var(--idc-azul-osc)}
+.guia-reflex{background:var(--panel);border:1px solid var(--borde);border-left:5px solid var(--idc-azul);border-radius:var(--radio-sm);padding:16px 18px;margin-bottom:16px}
+.guia-reflex h4{font-size:17px;margin:6px 0 8px;color:var(--idc-azul-osc)}
+.guia-reflex ol{margin:8px 0 10px;padding-left:22px;display:flex;flex-direction:column;gap:6px;font-size:15px;max-width:74ch}
+.guia-reflex .fuente{font-size:14.5px;background:var(--suave);border-radius:6px;padding:10px 12px;max-width:74ch}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;background:var(--idc-gris1);color:#fff;border-radius:999px;padding:3px 10px}
+.pill.warn{background:var(--ambar)}
+.retry.intenso{border-color:var(--rojo);background:#fff3f1}
+.retry.intenso .pausa{color:var(--rojo)}
+.indicio-cita{margin:10px 0;padding:12px 14px;background:#fffdf6;border-left:5px solid var(--idc-amarillo);border-radius:var(--radio-sm);font-size:15.5px}
+.indicio-lista{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:8px;counter-reset:ind}
+.indicio-lista li{counter-increment:ind;background:var(--suave);border-radius:var(--radio-sm);padding:12px 14px 12px 44px;position:relative;font-size:15.5px;line-height:1.6}
+.indicio-lista li::before{content:"💡" counter(ind);position:absolute;left:11px;top:12px;font-size:13px;font-weight:700;font-family:var(--f-mono)}
+.indicio-lista li.sol{background:var(--verde-ok-bg);outline:2px solid var(--verde-ok)}
+.indicio-lista li.sol::before{content:"✅";left:13px;top:11px}
+.indicio-lista li.vacio{background:none;padding-left:0;color:var(--idc-gris3)}
+.indicio-lista li.vacio::before{content:""}
+.meter{display:flex;gap:6px;margin:10px 0 4px;align-items:center;flex-wrap:wrap}
+.meter i{width:14px;height:14px;border-radius:50%;background:var(--borde);display:block}
+.meter i.on{background:var(--idc-amarillo)}
+.meter i.hot{background:var(--rojo)}
+.meter span{font-family:var(--f-mono);font-size:12.5px;color:var(--idc-gris1)}
+a.ref.gl{border-bottom:0;cursor:pointer}
+.cita small,.indicio-cita small{display:block;margin-top:4px;font-size:13px;color:var(--idc-gris1)}
+.retry .cita{margin:10px 0 0;font-size:15px}
+.consulta .sep{color:var(--idc-gris3);margin:0 6px}
+.st-done .ref{display:inline-block;margin-top:6px}
+.guia-reflex textarea{margin-top:10px}
+.guia-reflex .vlist{font-size:14.5px}
+.guia-reflex h4 label{font:inherit;color:inherit}
+.flash{outline:3px solid var(--idc-amarillo);outline-offset:4px;animation:flashPulse 1.2s ease-in-out 2}
+@keyframes flashPulse{0%,100%{outline-color:var(--idc-amarillo)}50%{outline-color:rgba(243,161,0,.2)}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
 footer{background:var(--idc-gris2);color:#fff;margin-top:40px;padding-block:22px 90px}
 footer .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
 footer .lg{background:#fff;border-radius:8px;padding:4px 8px}
@@ -444,6 +506,11 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <h1>El caso del pliego fantasma</h1>
   <p class="lead">Mañana a las 8:00 entra a máquina el encargo de la feria gastronómica. Anoche Don Aurelio, jefe de taller de la Litografía Kolb, cerró la orden de producción en la caja fuerte y no contesta el teléfono. Solo dejó notas. Tú tienes que abrir esa caja.</p>
   <div class="objetivo"><b>Lo que lograrás:</b> preparar archivos según requerimientos técnicos, verificando y ajustando tu presentación del cuadro de medios y canales (formato, resolución, tamaño, legibilidad, nomenclatura y completitud) para exponerla, y aplicar los fundamentos de la impresión offset (plancha, entintado, cuatricromía, pliego, tiraje, imposición y acabados) para calcular el aprovechamiento de un pliego con margen de pinza, sangrado y las dos orientaciones posibles.</div>
+  <div class="learning-key" aria-label="Diferencia entre evaluación y apoyo">
+    <div class="eval-key"><b>🟠 RETO EVALUADO · suma puntos</b>Las preguntas y controles marcados «Reto puntuado» registran tus intentos y reconocen cada acierto. Puedes volver a intentarlo.</div>
+    <div class="support-key"><b>🔵 INFORMACIÓN DE APOYO · no suma ni resta</b>Lecturas, ejemplos, glosario, fórmulas, pistas y recordatorios te ayudan a aprender y responder. Consúltalos cuando quieras.</div>
+  </div>
+  <div class="aviso-abierto"><b>🔓 Todas las estaciones están abiertas.</b> Puedes recorrerlas en el orden que prefieras, aunque el caso se entiende mejor de la 1 a la 5. Cuando una respuesta no salga, verás una cita del caso y un enlace 📍 que te lleva a dónde consultar. Si fallas 4 veces el mismo reto, se abre una ventana con los indicios del taller. Completa primero tu ficha para que tu avance se guarde.</div>
   <div class="card" style="margin-top:16px">
     <h3 style="margin-top:0">Ficha del detective</h3>
     <div class="resume" id="resume" hidden>
@@ -462,11 +529,10 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </header>
 
 <!-- ESTACIÓN 1 -->
-<section class="st locked" id="s1" data-gate="s1">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Escribe tu nombre en la ficha y pulsa “Abrir el expediente”.</span></div>
+<section class="st" id="s1" data-gate="s1">
   <div class="st-body">
   <div class="st-head"><span class="st-num">1</span><div><p class="eyebrow">Estación 1 · Activación inmersiva</p><h2>La escena del taller</h2></div></div>
-  <div class="note-story">
+  <div class="note-story" id="notaTaller">
     <p>La semana pasada se tiraron 3 000 volantes y el cliente los devolvió todos: el papel se acabó a mitad del tiraje. Don Aurelio dejó una nota pegada en la guillotina. Solo tiene números.</p>
     <p class="sig">— A.</p>
   </div>
@@ -482,7 +548,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 
   <h3>El mensaje cifrado</h3>
   <p>En el reverso de la nota hay números. Don Aurelio escribió al pie: <i>“Mi clave no empieza en 1: la A vale 3.”</i></p>
-  <div class="cipher" aria-label="Mensaje cifrado: 15 11 6 7, 14 3, 18 11 16 28 3">
+  <div class="cipher" id="cifra" aria-label="Mensaje cifrado: 15 11 6 7, 14 3, 18 11 16 28 3">
     <div class="w"><span>15</span><span>11</span><span>6</span><span>7</span></div>
     <div class="w"><span>14</span><span>3</span></div>
     <div class="w"><span>18</span><span>11</span><span>16</span><span>28</span><span>3</span></div>
@@ -521,16 +587,15 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- ESTACIÓN 2 -->
-<section class="st locked" id="s2" data-gate="s2">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Descifra el mensaje de la Estación 1 para abrir esta estación.</span></div>
+<section class="st" id="s2" data-gate="s2">
   <div class="st-body">
   <div class="st-head"><span class="st-num">2</span><div><p class="eyebrow">Estación 2 · Definición contextualizada · Pista 1</p><h2>El archivo sospechoso</h2></div></div>
   <div class="proc" data-stage="preprensa" data-note="Preparación y revisión de archivos. Antes de producir cualquier pieza, en preprensa se verifica que el archivo cumpla los requisitos técnicos de su destino: aquí, una pantalla o un proyector."></div>
-  <div class="note-story">
+  <div class="note-story" id="notaPostit">
     <p><b>El escenario.</b> Mañana a las 9:00, la agencia de publicidad que atiende a la feria gastronómica presentará al cliente su plan de medios en la sala de reuniones de la imprenta, con un proyector. La agencia envió por correo el archivo de esa presentación.</p>
     <p>Don Aurelio lo revisó anoche, antes de desaparecer. Imprimió sus datos técnicos y les pegó un post-it: <i>“Esto no se puede proyectar así. Cuenta cuántos requisitos falla.”</i> Ahora te toca revisarlo a ti, como lo haría un profesional de preprensa.</p>
   </div>
-  <div class="ctx">
+  <div class="ctx" id="ctxArchivo">
     <div class="card">
       <h4>¿Qué es un archivo .key?</h4>
       <p>Es el formato de <b>Keynote</b>, el programa de presentaciones de Apple. Solo se abre bien en una Mac o un iPad con Keynote. En la PC con Windows del aula o en otro equipo, no abre o se desconfigura: cambian las fuentes y se mueven los elementos.</p>
@@ -554,7 +619,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <div class="evid" id="evid"></div>
   <div class="fb" id="evFb" aria-live="polite"></div>
 
-  <div id="evCount" hidden>
+  <div id="evCount">
     <h3>Pista 1: ¿cuántos requisitos falla el archivo?</h3>
     <p>Revisa las 6 evidencias de arriba y <b>cuenta cuántas tienen el sello rojo “No cumple”</b>. Ese número (del 0 al 6) es la respuesta al post-it de Don Aurelio y el <b>primer dígito</b> del código de la caja fuerte.</p>
     <div class="ans">
@@ -564,7 +629,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
     <div class="fb" id="cntFb" aria-live="polite"></div>
   </div>
 
-  <div id="flipBlock" hidden>
+  <div id="flipBlock">
     <h3>Ahora ponle nombre a lo que encontraste</h3>
     <p>Cada evidencia que revisaste corresponde a un <b>requisito técnico</b>. Estas 6 tarjetas son la lista oficial que usarás para revisar tu propia presentación en la siguiente estación.</p>
     <div class="howto"><b class="t">Qué tienes que hacer</b><ol>
@@ -581,8 +646,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- APOYO A -->
-<section class="st locked" id="sA" data-gate="sA">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Encuentra la Pista 1 para revisar tu propio archivo.</span></div>
+<section class="st" id="sA" data-gate="sA">
   <div class="st-body">
   <div class="st-head"><span class="st-num apoyo">A</span><div><p class="eyebrow">Estación de apoyo · Lista de verificación previa</p><h2>Tu archivo, antes de exponer</h2></div></div>
   <div class="proc" data-stage="preprensa" data-note="Preparación de tu propio archivo: es la misma revisión de preprensa, ahora aplicada a tu presentación."></div>
@@ -622,8 +686,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- APOYO B -->
-<section class="st locked" id="sB" data-gate="sB">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Completa tu lista de verificación y valida el nombre de tu archivo.</span></div>
+<section class="st" id="sB" data-gate="sB">
   <div class="st-body">
   <div class="st-head"><span class="st-num apoyo">B</span><div><p class="eyebrow">Estación de apoyo · Ficha técnica · Pista 2</p><h2>Los testigos de la máquina</h2></div></div>
   <div class="proc" data-stage="impresion" data-note="Los testigos recorren todo el proceso: el CTP graba planchas, la prensa entinta e imprime, y la guillotina hace los acabados. La máquina 3D muestra la etapa de impresión."></div>
@@ -645,7 +708,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   </div>
   <div class="fb" id="matchFb" aria-live="polite"></div>
 
-  <div id="offsetBlock" hidden>
+  <div id="offsetBlock">
     <h3>Así viaja la tinta · máquina offset interactiva</h3>
     <p>Explora un cuerpo de impresión offset en 3D. <b>Arrastra</b> la máquina para girarla, toca cada <b>etapa</b> para ver qué hace y cambia a <b>4 cuerpos</b> para ver cómo se forma la cuatricromía.</p>
     <div class="press" id="pressWrap">
@@ -663,10 +726,13 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
       <p style="margin:10px 0 2px;font-weight:700;font-size:15px">Partes exploradas · <span id="pressCount">0 de 5</span></p>
       <ul class="vlist" id="pressSeen"></ul>
     </div>
-    <div class="fig" id="offsetSvg" hidden>
+    <div class="fig" id="offsetSvg">
       <svg viewBox="0 0 760 330" role="img" aria-labelledby="offT">
         <title id="offT">Cuerpo de impresión offset: rodillos entintadores y mojadores sobre el cilindro porta plancha, que transfiere la imagen a la mantilla y esta al papel sobre el cilindro de impresión.</title>
-        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0072b9"/></marker></defs>
+        <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0072b9"/></marker>
+          <path id="flowWater" class="motion-path" d="M132 70 C154 96 184 124 212 150"/><path id="flowInk" class="motion-path" d="M295 62 C278 96 255 122 244 150"/>
+          <path id="flowPlate" class="motion-path" d="M268 184 C294 195 314 202 330 204"/><path id="flowPaper" class="motion-path" d="M395 300 H735"/>
+        </defs>
         <g stroke="#2b2b2a" stroke-width="1.5">
           <circle cx="250" cy="40" r="18" fill="#f7b3d6"/><circle cx="295" cy="62" r="18" fill="#f7b3d6"/><circle cx="255" cy="86" r="16" fill="#f7b3d6"/>
           <circle cx="160" cy="100" r="16" fill="#b3e2f7"/><circle cx="132" cy="70" r="14" fill="#b3e2f7"/>
@@ -689,6 +755,10 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
         <text x="560" y="140">1 Plancha: la imagen</text><text x="560" y="156" class="lm">acepta tinta; el resto, agua</text>
         <text x="560" y="186">2 Mantilla: recibe la</text><text x="560" y="202" class="lm">imagen y la transfiere</text>
         <text x="560" y="232">3 Impresión: presiona</text><text x="560" y="248" class="lm">el papel contra la mantilla</text>
+        <circle class="moving" r="5" fill="#45b7e8"><animateMotion dur="1.7s" repeatCount="indefinite"><mpath href="#flowWater"/></animateMotion></circle>
+        <circle class="moving" r="5" fill="#222"><animateMotion dur="2s" repeatCount="indefinite"><mpath href="#flowInk"/></animateMotion></circle>
+        <circle class="moving" r="5" fill="#e6007e"><animateMotion dur="1.1s" repeatCount="indefinite"><mpath href="#flowPlate"/></animateMotion></circle>
+        <g class="moving"><rect x="0" y="-7" width="86" height="14" rx="2" fill="#fff" stroke="#0072b9" stroke-width="2"/><path d="M8 0h46m6 0h15" stroke="#e6007e" stroke-width="3"/><rect x="-5" y="-6" width="7" height="12" fill="#f3a100"/><animateMotion dur="3.2s" repeatCount="indefinite"><mpath href="#flowPaper"/></animateMotion></g>
       </svg>
     </div>
     <p style="font-size:14.5px;color:var(--idc-gris1);margin-top:8px">Un cuerpo imprime una tinta. Una máquina de cuatro cuerpos imprime cuatricromía (CMYK) en una sola pasada.</p>
@@ -701,7 +771,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
       <li>En el taller de planchas, toca las tintas que necesita cada cara. Cada tinta que toques graba una plancha.</li>
       <li>Mira el total de planchas grabadas y escríbelo en la respuesta.</li>
     </ol></div>
-    <div class="plates" aria-label="Taller de planchas">
+    <div class="plates" id="plates" aria-label="Taller de planchas">
       <div class="side"><h4>Frente · <span id="pcf">0</span> tintas</h4><div class="chips" data-side="f" role="group" aria-label="Tintas del frente"><button type="button" data-ink="C" aria-pressed="false" aria-label="Cian">C</button><button type="button" data-ink="M" aria-pressed="false" aria-label="Magenta">M</button><button type="button" data-ink="Y" aria-pressed="false" aria-label="Amarillo">Y</button><button type="button" data-ink="K" aria-pressed="false" aria-label="Negro">K</button></div><div class="plate-row" id="plF"></div></div>
       <span class="op" aria-hidden="true">+</span>
       <div class="side"><h4>Dorso · <span id="pcd">0</span> tintas</h4><div class="chips" data-side="d" role="group" aria-label="Tintas del dorso"><button type="button" data-ink="C" aria-pressed="false" aria-label="Cian">C</button><button type="button" data-ink="M" aria-pressed="false" aria-label="Magenta">M</button><button type="button" data-ink="Y" aria-pressed="false" aria-label="Amarillo">Y</button><button type="button" data-ink="K" aria-pressed="false" aria-label="Negro">K</button></div><div class="plate-row" id="plD"></div></div>
@@ -721,8 +791,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- ESTACIÓN 3 -->
-<section class="st locked" id="s3" data-gate="s3">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Consigue la Pista 2 con los testigos de la máquina.</span></div>
+<section class="st" id="s3" data-gate="s3">
   <div class="st-body">
   <div class="st-head"><span class="st-num">3</span><div><p class="eyebrow">Estación 3 · Simulador de contexto · Pista 3</p><h2>La orden de trabajo manchada</h2></div></div>
   <div class="proc" data-stage="preprensa" data-note="Imposición y cálculo de papel. Se hace en preprensa y al presupuestar, <b>antes</b> de grabar planchas e imprimir: define cuántas piezas entran en cada pliego y cuánto papel hay que comprar. Si este cálculo falla, el papel no alcanza en la máquina."></div>
@@ -730,9 +799,9 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <div class="howto"><b class="t">Antes de calcular: prepara tus herramientas</b><ol>
     <li><b>📝 Papel y lápiz:</b> dibuja el pliego como un rectángulo, anota sus medidas (100 × 70 cm) y pinta la franja de la pinza en un lado largo. Encima irás dibujando los volantes. Cada paso tiene un botón <b>📝 Esquema en papel</b> que te muestra qué dibujar.</li>
     <li><b>📊 Hoja de cálculo:</b> abre Excel o Google Sheets. Cada paso tiene un botón <b>📊 Fórmula de Excel</b> con la fórmula lista para copiar y pegar. También puedes descargar la plantilla con todo el cálculo.</li>
-    <li>Escribe tu resultado en cada paso y pulsa <b>Comprobar</b>. Los pasos se abren uno tras otro.</li>
+    <li>Escribe tu resultado en cada paso y pulsa <b>Comprobar</b>. Puedes consultar y responder los cinco pasos desde el inicio.</li>
   </ol><div class="row"><button class="btn btn-outline btn-sm" type="button" data-xlsx="xlsxMsg3">⬇ Plantilla Excel (.xlsx)</button><span class="save-state" id="xlsxMsg3" aria-live="polite"></span></div></div>
-  <div class="orden">
+  <div class="orden" id="orden0612">
     <h4>Litografía Kolb · Orden de trabajo 0612</h4>
     <dl>
       <dt>Pieza</dt><dd>Volante feria gastronómica, 4/1</dd>
@@ -748,7 +817,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <div class="steps" id="simSteps"></div>
   <div class="st-done" id="s3done"></div>
 
-  <div id="calcBlock" hidden>
+  <div id="calcBlock">
     <h3>Calculadora de montaje</h3>
     <p>Ya lo resolviste a mano. Usa la calculadora para comprobar los encargos de la Estación 5 y ver el esquema de las dos orientaciones.</p>
     <div class="card">
@@ -770,13 +839,12 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- ESTACIÓN 4 -->
-<section class="st locked" id="s4" data-gate="s4">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Reconstruye la orden de trabajo para obtener la Pista 3.</span></div>
+<section class="st" id="s4" data-gate="s4">
   <div class="st-body">
   <div class="st-head"><span class="st-num">4</span><div><p class="eyebrow">Estación 4 · Anagrama conceptual · Pista 4</p><h2>El cuaderno revuelto</h2></div></div>
   <div class="note-story"><p>En el cajón está el cuaderno de Don Aurelio. Escribió las palabras clave del oficio con las letras desordenadas, para que solo un preprensista pudiera leerlas.</p></div>
   <div class="anas" id="anas"></div>
-  <div id="riddle" hidden>
+  <div id="riddle">
     <h3>Pista 4: el acertijo final del cuaderno</h3>
     <p class="note-story" style="margin:0 0 10px"><i>“El último número es la cantidad de letras de la palabra que nombra cuántos ejemplares se imprimen.”</i></p>
     <div class="pistas">
@@ -792,7 +860,7 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
     <div class="fb" id="ridFb" aria-live="polite"></div>
   </div>
 
-  <div id="safeBlock" hidden>
+  <div id="safeBlock">
     <h3>La caja fuerte</h3>
     <div class="safe">
       <h3>Introduce el código de 4 dígitos</h3>
@@ -820,13 +888,12 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
 </section>
 
 <!-- ESTACIÓN 5 -->
-<section class="st locked" id="s5" data-gate="s5">
-  <div class="lockmsg"><span class="ic">🔒</span><span>Abre la caja fuerte para recibir la orden de producción.</span></div>
+<section class="st" id="s5" data-gate="s5">
   <div class="st-body">
   <div class="st-head"><span class="st-num">5</span><div><p class="eyebrow">Estación 5 · Transferencia y reflexión</p><h2>Tu primera orden como jefe de taller</h2></div></div>
   <div class="proc" data-stage="preprensa" data-note="Planificación de producción. Con estos cálculos el jefe de taller decide el montaje, compra el papel y pide las planchas antes de imprimir."></div>
   <p>Don Aurelio te dejó el taller. Estos son los encargos reales de mañana. Resuélvelos con los 5 pasos de la Estación 3: dibuja el esquema en papel, calcula en tu hoja de cálculo y comprueba con la calculadora de montaje.</p>
-  <div class="tbl"><table>
+  <div class="tbl" id="encargos"><table>
     <thead><tr><th>Encargo</th><th>Pieza al corte</th><th>Pliego / pinza</th><th>Sangrado</th><th>Tiraje / demasía</th></tr></thead>
     <tbody>
       <tr><td><b>1.</b> Volante feria gastronómica, 4/1</td><td class="num">21 × 29.7 cm</td><td class="num">70 × 100 / 1.5 cm</td><td class="num">3 mm</td><td class="num">3 000 / 5 % · ya resuelto</td></tr>
@@ -866,10 +933,42 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   </div>
   <div class="fb" id="e2Fb" aria-live="polite"></div>
 
-  <h3>Reflexión</h3>
-  <div class="grid2">
-    <div><label class="lb" for="r1">¿Dónde usarás esto fuera de clase?</label><textarea id="r1" placeholder="Piensa en un encargo real: un cliente, una pieza, una imprenta."></textarea><div class="count" id="r1c">0 / 60</div></div>
-    <div><label class="lb" for="r2">Dos hallazgos y una duda</label><textarea id="r2" placeholder="Hallazgo 1… Hallazgo 2… Mi duda es…"></textarea><div class="count" id="r2c">0 / 60</div></div>
+  <h3>Reflexión guiada</h3>
+  <p>Cada pregunta parte de una escena del caso. Lee la cita, abre los enlaces 📍 si necesitas recordar algo y sigue los pasos en orden. Debajo de cada respuesta verás qué partes ya escribiste.</p>
+
+  <div class="guia-reflex" id="rf1">
+    <span class="pill">Pregunta 1 · Lleva el caso a tu pieza</span>
+    <div class="cita">📌 <b>Del caso:</b> «La semana pasada se tiraron 3 000 volantes y el cliente los devolvió todos: el papel se acabó a mitad del tiraje.»
+      <small>— <a class="ref" href="#notaTaller" data-ref="notaTaller">Nota de Don Aurelio · Estación 1</a>. En la <a class="ref" href="#orden0612" data-ref="orden0612">orden de trabajo 0612</a> se lee el montaje que se usó: «Pieza derecha, sin girar».</small></div>
+    <h4><label for="r1">En la Litografía Kolb, el volante se montó «derecho, sin girar» y el papel se acabó a mitad del tiraje. Elige una pieza impresa de <b>tu</b> cuadro de medios: ¿qué revisarías en el archivo y qué calcularías en el pliego antes de enviarla a la imprenta, para que no te pase lo mismo?</label></h4>
+    <ol>
+      <li><b>Tu pieza:</b> nombra la pieza y su medida al corte. Ejemplo: «un afiche de 42 × 59.4 cm».</li>
+      <li><b>El archivo:</b> di qué revisarías antes de enviarlo: sangrado, resolución, modo de color o nombre del archivo.</li>
+      <li><b>El pliego:</b> di qué calcularías: la pinza, las dos orientaciones y los pliegos con demasía.</li>
+      <li><b>El para qué:</b> termina con qué error del caso evitarías.</li>
+    </ol>
+    <div class="consulta"><b>📍 Consulta aquí</b><a class="ref" href="#simSteps" data-ref="simSteps">Los 5 pasos de la Estación 3</a><span class="sep">·</span><a class="ref" href="#calcBlock" data-ref="calcBlock">Calculadora de montaje</a><span class="sep">·</span><a class="ref" href="#encargos" data-ref="encargos">Encargo 3: tu pieza</a><span class="sep">·</span><a class="ref" href="#flips" data-ref="flips">Los 6 requisitos del archivo</a><span class="sep">·</span><a class="ref gl" href="#glosario" data-term="imposicion">Imposición</a><br><b>📚 Referencias técnicas</b> <a class="ref" href="https://helpx.adobe.com/indesign/desktop/print/page-set-up-and-printer-marks/print-bleed-and-slug-areas.html" target="_blank" rel="noopener noreferrer">Adobe: sangrado para impresión</a> · <a class="ref" href="https://www.heidelberg.com/in/en/about_us/news/press_release_11904.jsp" target="_blank" rel="noopener noreferrer">HEIDELBERG: imposición y reducción de desperdicio de papel</a></div>
+    <textarea id="r1" placeholder="Mi pieza es… Antes de enviarla revisaría… En el pliego calcularía… para que…"></textarea>
+    <div class="count" id="r1c">0 / 60</div>
+    <div class="row"><button class="btn btn-outline btn-sm" type="button" data-reflection-check="r1">Revisar mi respuesta</button></div>
+    <ul class="vlist" id="r1chk" aria-live="polite"></ul>
+  </div>
+
+  <div class="guia-reflex" id="rf2">
+    <span class="pill">Pregunta 2 · Dos hallazgos y una duda</span>
+    <div class="cita">📌 <b>Del caso:</b> «Esto no se puede proyectar así. Cuenta cuántos requisitos falla.»
+      <small>— <a class="ref" href="#notaPostit" data-ref="notaPostit">Post-it de Don Aurelio sobre el archivo de la agencia · Estación 2</a>. Y sobre el papel: «Alguien derramó tinta encima y borró los cálculos» (<a class="ref" href="#orden0612" data-ref="orden0612">orden de trabajo 0612 · Estación 3</a>).</small></div>
+    <h4><label for="r2">Don Aurelio te dejó dos problemas: un archivo que «no se puede proyectar así» y una orden con los cálculos borrados. ¿Qué descubriste al revisar el archivo, qué descubriste al reconstruir el cálculo del pliego y qué duda te queda todavía?</label></h4>
+    <ol>
+      <li><b>Hallazgo 1 · el archivo:</b> un requisito que fallaba en el archivo de la agencia y cómo lo cuidarás en tu presentación.</li>
+      <li><b>Hallazgo 2 · el pliego:</b> un dato del cálculo que te sorprendió, por ejemplo qué pasó al restar la pinza o al girar la pieza.</li>
+      <li><b>Tu duda:</b> una pregunta concreta que todavía tengas, escrita con signos «¿…?».</li>
+    </ol>
+    <div class="consulta"><b>📍 Consulta aquí</b><a class="ref" href="#evid" data-ref="evid">Las 6 evidencias del archivo</a><span class="sep">·</span><a class="ref" href="#flips" data-ref="flips">Los 6 requisitos</a><span class="sep">·</span><a class="ref" href="#orden0612" data-ref="orden0612">Orden de trabajo 0612</a><span class="sep">·</span><a class="ref" href="#step-s4" data-ref="step-s4">Paso 4 · la pieza girada</a><br><b>📚 Referencias técnicas</b> <a class="ref" href="https://helpx.adobe.com/indesign/desktop/save-export-and-publish/save-and-export/export-pdfs-for-printing.html" target="_blank" rel="noopener noreferrer">Adobe: exportar PDF para impresión</a> · <a class="ref" href="https://helpx.adobe.com/acrobat/desktop/print-documents/color-print-quality/print-color-separations.html" target="_blank" rel="noopener noreferrer">Adobe: separaciones CMYK</a></div>
+    <textarea id="r2" placeholder="Hallazgo 1 (archivo): … Hallazgo 2 (pliego): … Mi duda: ¿…?"></textarea>
+    <div class="count" id="r2c">0 / 60</div>
+    <div class="row"><button class="btn btn-outline btn-sm" type="button" data-reflection-check="r2">Revisar mi respuesta</button></div>
+    <ul class="vlist" id="r2chk" aria-live="polite"></ul>
   </div>
   <h3>Ticket de salida</h3>
   <p>¿Qué tan seguro te sientes para calcular un pliego solo?</p>
@@ -987,6 +1086,17 @@ footer .wk{margin-left:auto;font-family:var(--f-mono);background:var(--idc-amari
   <p style="font-size:14px;color:var(--idc-gris1);margin-top:10px">Si tu Excel separa con coma en lugar de punto y coma, cambia <code>;</code> por <code>,</code>. Si usa coma decimal, escribe <code>0,3</code> en lugar de <code>0.3</code>. Compara el resultado con tu esquema en papel: si coinciden, ¡vas muy bien!</p>
 </div></div>
 
+<div class="modal-bg" id="m-indicios"><div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="indT" aria-describedby="indIntro">
+  <button class="x" type="button" data-close aria-label="Cerrar">✕</button>
+  <p class="eyebrow">Ayuda del taller · Indicios</p>
+  <h2 id="indT">💡 Indicios</h2>
+  <p id="indIntro" style="font-size:15.5px"></p>
+  <div class="indicio-cita" id="indCita"></div>
+  <ol class="indicio-lista" id="indList" aria-live="polite"></ol>
+  <div class="row"><button class="btn btn-amarillo" type="button" id="indNext">💡 Ver el indicio 2</button><button class="btn btn-primary" type="button" id="indRetry">✏️ Volver a intentarlo</button></div>
+  <div class="consulta" id="indConsulta"></div>
+</div></div>
+
 <div class="modal-bg" id="m-glosario"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="glT">
   <button class="x" type="button" data-close aria-label="Cerrar">✕</button>
   <h2 id="glT">📖 Glosario</h2>
@@ -1005,6 +1115,10 @@ window.APP = (function(){
   var STATION_ORDER = ["s1","s2","sA","sB","s3","s4","s5"];
   var STATION_NAMES = {s1:"1 · La escena del taller",s2:"2 · El archivo sospechoso",sA:"A · Tu archivo",sB:"B · Los testigos",s3:"3 · La orden manchada",s4:"4 · El cuaderno y la caja",s5:"5 · Tu primera orden"};
   var CODE = [4,5,9,6];
+  /* Candados de las estaciones. false: todas las estaciones y bloques abiertos desde el inicio.
+     true: cada estación se abre al superar la anterior (comportamiento original). */
+  var CANDADOS = false;
+  var INTENTOS_INDICIOS = 4; /* fallos en un mismo reto antes de abrir la ventana de indicios */
 
   var ITEMS = {
     "e1-hip":5,"e1-cif":10,
@@ -1171,8 +1285,193 @@ window.APP = (function(){
     "Un buen nombre de archivo ahorra preguntas al equipo de producción."
   ];
 
+  /* ===== Retroalimentación asistida =====
+     Por reto: t = nombre del reto · foco = selector del campo para reintentar ·
+     cita = texto del caso · fuente = [id del lugar donde aparece, rótulo del enlace] ·
+     links = dónde consultar ([id] o ["gl:término"] para el glosario) ·
+     ind = 4 indicios; el último es la resolución guiada. */
+  var PIST = "«Esto no se puede proyectar así. Cuenta cuántos requisitos falla.»";
+  var ORDEN = ["orden0612", "Orden de trabajo 0612 · Estación 3"];
+  var AYUDA = {
+    "e1-cif":{t:"El mensaje cifrado", foco:"#cifIn",
+      cita:"«Mi clave no empieza en 1: la A vale 3.»", fuente:["cifra","Nota de Don Aurelio al pie del mensaje · Estación 1"],
+      links:[["cifra","El mensaje y la parte de la clave"],["sheetTool","Descífralo con una hoja de cálculo"]],
+      ind:["La clave dice que la A vale 3, no 1. Entonces cada número está <b>2 lugares adelantado</b> respecto de la posición de la letra en el alfabeto.",
+        "Resta 2 a cada número y busca la letra que ocupa esa posición (A = 1, B = 2, C = 3…). Por ejemplo: 15 − 2 = 13, y la letra 13 es la <b>M</b>.",
+        "La primera palabra es <b>M-I-D-E</b> (15, 11, 6, 7). Haz lo mismo con la segunda (14 y 3) y con la tercera (18, 11, 16, 28, 3).",
+        "14 → L y 3 → A. Luego 18 → P, 11 → I, 16 → N, 28 → Z y 3 → A. El mensaje es <b>«MIDE LA PINZA»</b>: escríbelo y pulsa Comprobar."]},
+    "e2-ev1":{t:"Evidencia 1 · Formato", foco:"#card-ev1 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev1","Evidencia 1: archivo .key en 4:3"],["ctxArchivo","¿Qué es un archivo .key? · ¿Qué es 4:3?"],["gl:keynote","Keynote (.key)"],["gl:proporcion","Proporción 4:3 / 16:9"]],
+      ind:["Piensa dónde se abrirá el archivo: en la computadora de la sala de reuniones de la imprenta, conectada a un proyector.",
+        "Lee la tarjeta «¿Qué es un archivo .key?»: Keynote solo abre bien en Mac o iPad; en otro equipo no abre o se desconfigura.",
+        "Lee la tarjeta «¿Qué significa proporción 4:3?»: los proyectores actuales son 16:9, y una diapositiva 4:3 deja franjas negras.",
+        "Fallan dos datos a la vez: el formato (.key) y la proporción (4:3). La respuesta es <b>«No cumple»</b>: se expone en PDF 16:9."]},
+    "e2-ev2":{t:"Evidencia 2 · Resolución", foco:"#card-ev2 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev2","Evidencia 2: lienzo y fotos"],["flips","Tarjeta del requisito «Resolución»"],["gl:resolucion","Resolución"]],
+      ind:["Compara dos números de la evidencia: el ancho del lienzo y el ancho de las fotos.",
+        "Una imagen a pantalla completa necesita, como mínimo, el mismo ancho que el lienzo: 1920 px.",
+        "Las fotos miden 2400 px de ancho. ¿Es más o menos que 1920 px?",
+        "2400 px es más que 1920 px: las fotos se verán nítidas aunque ocupen toda la pantalla. La respuesta es <b>«Cumple»</b>."]},
+    "e2-ev3":{t:"Evidencia 3 · Tamaño", foco:"#card-ev3 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev3","Evidencia 3: peso del archivo"],["flips","Tarjeta del requisito «Tamaño»"]],
+      ind:["El requisito de tamaño se pregunta: ¿se puede subir el archivo?",
+        "El aula virtual acepta archivos de 20 MB como máximo (tarjeta «Tamaño»).",
+        "Compara el peso del archivo, 64 MB, con ese límite de 20 MB.",
+        "64 MB es más del triple de 20 MB. La respuesta es <b>«No cumple»</b>: hay que comprimir las imágenes a 150 ppp."]},
+    "e2-ev4":{t:"Evidencia 4 · Legibilidad", foco:"#card-ev4 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev4","Evidencia 4: tamaños de letra"],["flips","Tarjeta del requisito «Legibilidad»"],["gl:punto","Punto (pt)"]],
+      ind:["Imagina al cliente sentado a 3 metros del proyector: ¿podría leer todo el texto?",
+        "Para proyectar se usan títulos de 36 pt o más, texto de 24 pt o más y 6 líneas por diapositiva como máximo.",
+        "Los títulos (40 pt) están bien. Revisa el texto de las tablas (14 pt) y las líneas por diapositiva (12).",
+        "14 pt es menos que 24 pt y 12 líneas son el doble de 6. Basta un dato que falle: la respuesta es <b>«No cumple»</b>."]},
+    "e2-ev5":{t:"Evidencia 5 · Nomenclatura", foco:"#card-ev5 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev5","Evidencia 5: nombre del archivo"],["fname","Validador de nomenclatura · Estación A"],["gl:nomenclatura","Nomenclatura"]],
+      ind:["Pregúntate: ¿alguien del taller sabría de quién es, de qué sesión es y qué versión es, sin abrirlo?",
+        "El formato correcto es <code>S06_CuadroMedios_ApellidoNombre_v01.pdf</code>: sin espacios, tildes ni paréntesis.",
+        "Busca en «cuadro medios FINAL final(2).key»: espacios, paréntesis, la palabra «final» repetida, y la falta de sesión y de autor.",
+        "Tiene espacios y paréntesis, no indica sesión ni autor, y «final final» no es una versión. La respuesta es <b>«No cumple»</b>."]},
+    "e2-ev6":{t:"Evidencia 6 · Completitud", foco:"#card-ev6 button",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["card-ev6","Evidencia 6: secciones"],["flips","Tarjeta del requisito «Completitud»"]],
+      ind:["El requisito de completitud se pregunta: ¿está todo lo que pide el encargo?",
+        "Las secciones que se piden son: portada, objetivo, público, cuadro de medios y canales, cronograma, conclusión y fuentes.",
+        "Compara esa lista, punto por punto, con las secciones de la evidencia 6.",
+        "Están las siete secciones. La respuesta es <b>«Cumple»</b>."]},
+    "e2-cnt":{t:"Pista 1 · ¿Cuántos requisitos falla?", foco:"#cntIn",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["evid","Las 6 evidencias del archivo"],["notaPostit","El post-it de Don Aurelio"]],
+      ind:["Vuelve a las 6 evidencias y mira el sello de cada una: verde «Cumple» o rojo «No cumple».",
+        "Si alguna evidencia aún no tiene sello, clasifícala primero: el sello aparece cuando aciertas.",
+        "Solo dos evidencias cumplen: la resolución y la completitud. Calcula 6 − 2.",
+        "Fallan formato, tamaño, legibilidad y nomenclatura: <b>4 requisitos</b>. Escribe 4."]},
+    "b-pl":{t:"Pista 2 · Planchas de un trabajo 4/1", foco:"#plIn",
+      cita:"«El volante se imprime a todo color por el frente y solo en negro por el dorso.»", fuente:["plates","Pista 2 · Estación B"],
+      links:[["plates","Taller de planchas"],["orden0612","Orden 0612: «Volante feria gastronómica, 4/1»"],["gl:notacion","Notación 4/0, 4/1, 4/4"],["gl:plancha","Plancha"]],
+      ind:["Lee 4/1 como dos números: el primero son las tintas del <b>frente</b>; el segundo, las del <b>dorso</b>.",
+        "A todo color son 4 tintas (C, M, Y, K). Solo en negro es 1 tinta (K).",
+        "Se graba una plancha por cada tinta y por cada cara. En el taller de planchas, toca C, M, Y y K en el frente y solo K en el dorso.",
+        "4 planchas del frente + 1 del dorso = <b>5 planchas</b>. Escribe 5."]},
+    "c-s1":{t:"Paso 1 · Área útil del lado corto", foco:"#x1",
+      cita:"Pliego: 70 × 100 cm · Pinza: 1.5 cm en el lado largo", fuente:ORDEN,
+      links:[["orden0612","Orden de trabajo 0612"],["step-s1","Paso 1 y su esquema en papel"],["gl:pinza","Pinza"],["gl:areautil","Área útil"]],
+      ind:["Dibuja el pliego: 100 cm de largo por 70 cm de corto. Pinta una franja en <b>uno</b> de los lados largos: esa es la pinza.",
+        "La franja corre a lo largo de los 100 cm, pero ocupa altura: le quita espacio al <b>lado corto</b> (70 cm).",
+        "La pinza va en un solo borde: réstala <b>una sola vez</b> y solo al lado corto. El lado largo sigue en 100 cm.",
+        "70 − 1.5 = <b>68.5 cm</b>. Escribe 68.5."]},
+    "c-s2":{t:"Paso 2 · Pieza con sangrado", foco:"#x2a",
+      cita:"Formato al corte: 21 × 29.7 cm (A4) · Sangrado: 3 mm por lado", fuente:ORDEN,
+      links:[["orden0612","Orden de trabajo 0612"],["step-s2","Paso 2 y su esquema en papel"],["gl:sangrado","Sangrado"]],
+      ind:["Convierte primero: 3 mm = <b>0.3 cm</b>.",
+        "«Por lado» significa que el sangrado se suma a la izquierda y a la derecha, y también arriba y abajo.",
+        "Cada medida crece 2 × 0.3 = <b>0.6 cm</b>.",
+        "Ancho: 21 + 0.6 = <b>21.6 cm</b>. Alto: 29.7 + 0.6 = <b>30.3 cm</b>."]},
+    "c-s3":{t:"Paso 3 · Orientación A", foco:"#x3",
+      cita:"Montaje usado: «Pieza derecha, sin girar»", fuente:ORDEN,
+      links:[["orden0612","Orden de trabajo 0612"],["step-s3","Paso 3 y su esquema en papel"],["gl:orientacion","Orientación"]],
+      ind:["Usa lo que ya calculaste: área útil de 100 × 68.5 cm y pieza de 21.6 × 30.3 cm.",
+        "Pieza derecha: el ancho (21.6) se reparte en los 100 cm y el alto (30.3), en los 68.5 cm.",
+        "Divide y quédate con la parte entera: 100 ÷ 21.6 = 4.6 → 4 columnas; 68.5 ÷ 30.3 = 2.3 → 2 filas.",
+        "4 columnas × 2 filas = <b>8 piezas</b>. Escribe 8."]},
+    "c-s4":{t:"Paso 4 · Orientación B", foco:"#x4",
+      cita:"Montaje usado: «Pieza derecha, sin girar». ¿Y si se hubiera girado?", fuente:ORDEN,
+      links:[["step-s4","Paso 4 y su esquema en papel"],["step-s3","Compáralo con el paso 3"],["gl:orientacion","Orientación"]],
+      ind:["Gira la pieza 90°: ahora el alto (30.3) se reparte en los 100 cm.",
+        "Y el ancho (21.6) se reparte en los 68.5 cm útiles.",
+        "100 ÷ 30.3 = 3.3 → 3 columnas; 68.5 ÷ 21.6 = 3.2 → 3 filas.",
+        "3 × 3 = <b>9 piezas</b>. Escribe 9: es también el dígito de la Pista 3."]},
+    "c-s5":{t:"Paso 5 · Pliegos para el tiraje", foco:"#x5",
+      cita:"Tiraje: 3 000 ejemplares · demasía 5 %", fuente:ORDEN,
+      links:[["orden0612","Orden de trabajo 0612"],["step-s5","Paso 5 y su esquema en papel"],["gl:tiraje","Tiraje"],["gl:demasia","Demasía"]],
+      ind:["Usa la orientación B: <b>9 volantes</b> por pliego.",
+        "Pliegos netos: 3 000 ÷ 9 = 333.3. No existe un pedazo de pliego: redondea hacia arriba, <b>334</b>.",
+        "Para sumar el 5 % de demasía, multiplica por 1.05: 334 × 1.05 = 350.7.",
+        "Redondea otra vez hacia arriba: <b>351 pliegos</b>. Escribe 351."]},
+    "d-rid":{t:"Pista 4 · El acertijo final", foco:"#ridIn",
+      cita:"«El último número es la cantidad de letras de la palabra que nombra cuántos ejemplares se imprimen.»", fuente:["riddle","Acertijo del cuaderno · Estación 4"],
+      links:[["anas","Las 5 palabras del cuaderno"],["orden0612","Orden de trabajo 0612"],["gl:tiraje","Tiraje"]],
+      ind:["Busca la palabra del oficio que nombra <b>cuántos ejemplares</b> se imprimen.",
+        "Es la palabra 5 del cuaderno, y en la orden 0612 aparece junto a «3 000 ejemplares».",
+        "La palabra es TIRAJE. Cuenta sus letras, o usa <code>=LARGO(\"TIRAJE\")</code> en Excel.",
+        "T-I-R-A-J-E: <b>6 letras</b>. Escribe 6."]},
+    "safe":{t:"La caja fuerte", foco:"#d1",
+      cita:"«Pista 1 · Pista 2 · Pista 3 · Pista 4, en ese orden.»", fuente:["safeBlock","Caja fuerte · Estación 4"],
+      links:[["slots","Libreta de pistas (barra superior)"],["evCount","Pista 1 · Estación 2"],["plates","Pista 2 · Estación B"],["step-s4","Pista 3 · Estación 3"],["riddle","Pista 4 · Estación 4"]],
+      ind:["Mira la libreta de pistas en la barra superior: cada dígito que encontraste ya aparece ahí.",
+        "Pista 1 = requisitos que falla el archivo (Estación 2). Pista 2 = planchas de un trabajo 4/1 (Estación B).",
+        "Pista 3 = piezas por pliego con la pieza girada (Estación 3). Pista 4 = letras de la palabra TIRAJE (Estación 4).",
+        "4 fallas · 5 planchas · 9 piezas · 6 letras. El código es <b>4 5 9 6</b>."]},
+    "e-enc":{t:"Encargo 2 · Tarjetas por medio pliego", foco:"#e2In",
+      cita:"Tarjeta de presentación 4/4 · 9 × 5.5 cm · ½ pliego de 50 × 70 cm con pinza de 1 cm · sangrado 3 mm", fuente:["encargos","Encargos de mañana · Estación 5"],
+      links:[["encargos","Tabla de encargos"],["simSteps","Los 5 pasos de la Estación 3"],["calcBlock","Calculadora de montaje"]],
+      ind:["Repite los pasos de la Estación 3 con los datos del encargo 2. Área útil: 50 − 1 = <b>49 cm</b>; el lado largo sigue en 70 cm.",
+        "Tarjeta con sangrado: 9 + 0.6 = <b>9.6 cm</b> y 5.5 + 0.6 = <b>6.1 cm</b>.",
+        "Orientación A: 70 ÷ 9.6 → 7 y 49 ÷ 6.1 → 8. Orientación B: 70 ÷ 6.1 → 11 y 49 ÷ 9.6 → 5.",
+        "A: 7 × 8 = 56. B: 11 × 5 = 55. La más eficiente es la A: escribe <b>56</b>."]},
+    "r1":{t:"Pregunta 1 · Lleva el caso a tu pieza", foco:"#r1",
+      cita:"«La semana pasada se tiraron 3 000 volantes y el cliente los devolvió todos: el papel se acabó a mitad del tiraje.»", fuente:["notaTaller","Nota de Don Aurelio · Estación 1"],
+      links:[["orden0612","Orden 0612: «Pieza derecha, sin girar»"],["simSteps","Los 5 pasos de la Estación 3"],["calcBlock","Calculadora de montaje"],["encargos","Encargo 3: tu pieza"]],
+       ind:["Empieza por tu pieza: «Mi pieza es un [volante, afiche, tarjeta…] de [ancho] × [alto] cm».",
+        "Sigue con el archivo: «Antes de enviarla revisaría [el sangrado de 3 mm, la resolución, el modo de color, el nombre del archivo]».",
+        "Luego el pliego: «En el pliego de 70 × 100 cm restaría la pinza y compararía la pieza derecha con la girada».",
+        "Cierra con el para qué: «…para que el papel no se acabe a mitad del tiraje, como en la Litografía Kolb». Escribe la tuya con tu propia pieza: no copies el ejemplo."],
+       external:["https://helpx.adobe.com/indesign/desktop/print/page-set-up-and-printer-marks/print-bleed-and-slug-areas.html","https://www.heidelberg.com/in/en/about_us/news/press_release_11904.jsp"],
+       finalHint:"Completa con tus propios datos esta secuencia: pieza y medida → una comprobación del archivo → una comparación de montajes → qué problema del caso ayudaría a prevenir."},
+    "r2":{t:"Pregunta 2 · Dos hallazgos y una duda", foco:"#r2",
+      cita:PIST, fuente:["notaPostit","Post-it de Don Aurelio · Estación 2"],
+      links:[["evid","Las 6 evidencias del archivo"],["flips","Los 6 requisitos"],["orden0612","Orden de trabajo 0612"],["step-s4","Paso 4 · la pieza girada"]],
+       ind:["Hallazgo 1, sobre el archivo: «Descubrí que [requisito] fallaba porque [dato de la evidencia]. En mi presentación lo cuidaré [cómo]».",
+        "Hallazgo 2, sobre el pliego: «Me sorprendió que al [restar la pinza / girar la pieza] cambiara [qué cambió]».",
+        "Tu duda, como pregunta: «¿Qué pasa si…?» o «¿Cómo se decide…?». Escríbela con los signos «¿…?».",
+        "Ejemplo: «Hallazgo 1: un archivo .key no abre en Windows; exportaré mi presentación a PDF 16:9. Hallazgo 2: girar la pieza cambió cuántas entraban por pliego. Mi duda: ¿cómo influye la fibra del papel al girar la pieza?». Escribe la tuya con tus palabras."],
+       external:["https://helpx.adobe.com/indesign/desktop/save-export-and-publish/save-and-export/export-pdfs-for-printing.html","https://helpx.adobe.com/acrobat/desktop/print-documents/color-print-quality/print-color-separations.html"],
+       finalHint:"Organiza tres frases separadas: un requisito del archivo con el dato que lo demuestra; un resultado del cálculo del pliego; y una pregunta abierta que aún tengas. Formula todo desde lo que observaste."}
+  };
+  var TESTS_IND = {
+    m1:["Fíjate en el verbo: la operaria <b>grabó</b> algo.","Lo que grabó es una lámina de aluminio, una por cada tinta.","En el glosario, busca la lámina que lleva la imagen de una tinta: hay una por tinta y por cara.","Es la <b>Plancha</b>. Toca la declaración y luego «Plancha» en el banco de términos."],
+    m2:["Fíjate en lo que reguló: el tintero y los rodillos.","Habla del camino de la tinta, desde el tintero hasta la plancha.","También menciona el equilibrio entre agua y tinta: con mucha agua, el color se ve lavado.","Es el <b>Entintado</b>. Toca la declaración y luego «Entintado»."],
+    m3:["Cuenta cuántas tintas usó el colorista.","Son cuatro tintas: cian, magenta, amarillo y negro (CMYK), combinadas con tramas.","Busca el término que nombra la impresión a color con esas cuatro tintas.","Es la <b>Cuatricromía</b>. Toca la declaración y luego «Cuatricromía»."],
+    m4:["Fíjate en lo que entregó el almacenero: hojas de papel.","Esas hojas tienen una medida de imprenta: 70 × 100 cm.","La hoja de papel de imprenta tiene un nombre propio en el taller.","Es el <b>Pliego</b>. Toca la declaración y luego «Pliego»."],
+    m5:["Fíjate en el número: 3 000 ejemplares.","Habla de la cantidad de ejemplares que se imprimen.","El 5 % extra es la demasía; tú buscas el nombre de la cantidad que pidió el cliente.","Es el <b>Tiraje</b>. Toca la declaración y luego «Tiraje»."],
+    m6:["Fíjate en el verbo: «decidí cómo se reparten».","Reparte piezas sobre el pliego, antes de grabar las planchas.","Busca en el glosario la distribución de las piezas en el pliego.","Es la <b>Imposición</b>. Toca la declaración y luego «Imposición»."],
+    m7:["Fíjate en cuándo trabajó: después de que la tinta secó.","Sus verbos son cortar, plastificar y doblar.","Busca el término que agrupa los procesos posteriores a la impresión.","Son los <b>Acabados</b>. Toca la declaración y luego «Acabados»."],
+    m8:["Fíjate en lo que hacen las uñas: sujetan.","Sujetan el pliego por un borde largo.","En esa franja nunca cae tinta, por eso se resta del área útil.","Es la <b>Pinza</b>. Toca la declaración y luego «Pinza»."]
+  };
+  TESTS.forEach(function(t){
+    AYUDA["b-" + t.id] = {t:"Testigo · " + t.who, foco:'[data-t="' + t.id + '"]', cita:"«" + t.text + "»", fuente:["tests", t.who + " · Estación B"],
+      links:[["tests","Declaraciones de los testigos"],["terms","Banco de términos"],["gl:","Glosario del taller"]], ind:TESTS_IND[t.id]};
+  });
+  var ANAG_IND = {
+    a1:[[["step-s1","Paso 1 de la Estación 3"],["tests","Testigo: ayudante de máquina"]],["Relee la pista: es la franja del pliego donde las uñas lo sujetan.","La usaste en el paso 1 de la Estación 3 para calcular el área útil.","Tiene 5 letras, empieza con <b>P</b> y termina con <b>A</b>.","Es <b>PINZA</b>."]],
+    a2:[[["plates","Taller de planchas · Estación B"]],["Relee la pista: es una lámina grabada, una por cada tinta y cara.","La contaste en la Pista 2: un trabajo 4/1 necesita 5.","Tiene 7 letras, empieza con <b>P</b>, termina con <b>A</b> y lleva «CH».","Es <b>PLANCHA</b>."]],
+    a3:[[["step-s2","Paso 2 de la Estación 3"]],["Relee la pista: es lo que la imagen sobrepasa la línea de corte.","La sumaste en el paso 2 de la Estación 3: 3 mm por lado.","Tiene 8 letras, empieza con <b>S</b> y termina con <b>O</b>.","Es <b>SANGRADO</b>."]],
+    a4:[[["tests","Testigo: montajista · Estación B"]],["Relee la pista: es cómo se reparten las piezas sobre el pliego.","La describió el montajista: «Decidí cómo se reparten las piezas sobre la hoja antes de grabar».","Tiene 10 letras: empieza con <b>IMPO</b> y termina con <b>CION</b> (escríbela sin tilde).","Es <b>IMPOSICION</b> (imposición)."]],
+    a5:[[["orden0612","Orden de trabajo 0612"]],["Relee la pista: es la cantidad de ejemplares a imprimir.","En la orden 0612 aparece junto a «3 000 ejemplares».","Tiene 6 letras, empieza con <b>T</b> y termina con <b>E</b>.","Es <b>TIRAJE</b>."]]
+  };
+  ANAG.forEach(function(a, i){
+    AYUDA["d-" + a.id] = {t:"Palabra " + (i + 1) + " del cuaderno · " + a.mix, foco:"#in-" + a.id,
+      cita:"«Escribió las palabras clave del oficio con las letras desordenadas, para que solo un preprensista pudiera leerlas.»", fuente:["anas","Cuaderno de Don Aurelio · Estación 4"],
+      links:ANAG_IND[a.id][0].concat([["gl:","Glosario del taller"]]), ind:ANAG_IND[a.id][1]};
+  });
+
+  /* Señales que guían cada reflexión (se buscan en el texto sin tildes ni mayúsculas) */
+  var RF_CRIT = {
+    r1:[[/(volante|flyer|afiche|poster|cartel|tarjeta|folleto|brochure|diptico|triptico|banner|banderola|catalogo|revista|etiqueta|empaque|caja|panel|valla|paleta|libro|calendario|sticker|invitacion|menu|encarte|separador|postal|gigantografia|bolsa|pieza)/, "Nombras una pieza impresa de tu cuadro de medios"],
+      [/\d\s*(cm|mm|m\b|x|×)|\d\s*por\s*\d/, "Das su medida al corte (por ejemplo, 42 × 59.4 cm)"],
+      [/(sangrad|resoluci|ppp|dpi|cmyk|color|nombre|nomenclatura|formato|pdf)/, "Dices qué revisarías en el archivo"],
+      [/(pinza|orientaci|gir|pliego|demasia|imposici|montaje)/, "Dices qué calcularías en el pliego"],
+      [/(para que|para no|para evitar|evit|porque|asi no|ahorr|desperdic|no se acabe|no falte|no alcance)/, "Explicas qué error del caso evitarías"]],
+    r2:[[/(archivo|formato|pdf|key|keynote|16:9|4:3|resoluci|tamano|peso|mb\b|legib|\bpt\b|punto|nomenclatura|nombre|completitud|proyect|diapositiva|presentaci)/, "Hallazgo 1: algo que descubriste sobre el archivo"],
+      [/(pliego|pinza|sangrad|orientaci|gir|piezas|demasia|imposici|tiraje|plancha|offset|mantilla|cuatricrom|cmyk|montaje)/, "Hallazgo 2: algo que descubriste sobre el pliego o la máquina"],
+      [/(\?|duda|no se |no entiendo|me pregunto|quisiera saber)/, "Tu duda, escrita como pregunta («¿…?»)"]]
+  };
+
   /* ================= ESTADO ================= */
-  var state = {name:"", score:0, done:{}, tries:{}, gates:{}, streak:0, bestStreak:0, rankIdx:0, hip:null, clues:[null,null,null,null], evSolved:{}, flipped:{}, checks:{}, nameOk:false, paired:{}, simDone:{}, anaDone:{}, anaTries:{}, ticket:null, closed:false, student:null, startTs:null, endTs:null, current:0, answers:{}, historial:[], replay:[], r1:"", r2:"", hipComp:null, pressSeen:{}};
+  var state = {name:"", score:0, done:{}, tries:{}, gates:{}, streak:0, bestStreak:0, rankIdx:0, hip:null, clues:[null,null,null,null], evSolved:{}, flipped:{}, checks:{}, nameOk:false, paired:{}, simDone:{}, anaDone:{}, anaTries:{}, ticket:null, closed:false, student:null, startTs:null, endTs:null, current:0, answers:{}, historial:[], replay:[], r1:"", r2:"", hipComp:null, pressSeen:{}, indiciosShown:{}, reflectionAttempts:{r1:0,r2:0}};
 
   /* ================= UTILIDADES ================= */
   function $(id){ return document.getElementById(id); }
@@ -1183,10 +1482,10 @@ window.APP = (function(){
   function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
   function who(){ return state.name ? state.name : "detective"; }
 
-  function toast(html){
+  function toast(html, kind){
     if (RESTORING) return;
-    var t = $("toast"); t.innerHTML = html; t.classList.add("on");
-    clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove("on"); }, 3200);
+    var t = $("toast"); t.innerHTML = html; t.classList.toggle("success", kind === "success"); t.classList.add("on");
+    clearTimeout(toast._t); toast._t = setTimeout(function(){ t.classList.remove("on", "success"); }, 4200);
   }
 
   function sparks(ev){
@@ -1206,6 +1505,35 @@ window.APP = (function(){
     }
   }
 
+  function fireworks(ev){
+    if (RESTORING) return;
+    var x = window.innerWidth/2, y = window.innerHeight/2;
+    if (ev && typeof ev.clientX === "number" && (ev.clientX || ev.clientY)) { x = ev.clientX; y = ev.clientY; }
+    else if (ev && ev.target && ev.target.getBoundingClientRect) { var r = ev.target.getBoundingClientRect(); x = r.left + r.width/2; y = r.top + r.height/2; }
+    var cols = ["#f3a100", "#0072b9", "#e6007e", "#00a0e3", "#ffd400", "#fff"];
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var bursts = [{x:x,y:y,offset:0},{x:x-42,y:y-26,offset:.09},{x:x+42,y:y-26,offset:.16}];
+    bursts.forEach(function(point, burstIndex){
+      var fw = document.createElement("span"); fw.className = "firework"; fw.setAttribute("aria-hidden", "true");
+      fw.style.left = point.x + "px"; fw.style.top = point.y + "px";
+      if (!reduced) {
+        for (var i=0;i<20;i++) {
+          var particle = document.createElement("i"), angle = i*18 + Math.random()*8;
+          particle.style.setProperty("--fire-angle", angle + "deg");
+          particle.style.setProperty("--fire-distance", (52 + Math.random()*55) + "px");
+          particle.style.setProperty("--fire-color", cols[(i+burstIndex*2)%cols.length]);
+          particle.style.setProperty("--fire-delay", (point.offset + Math.random()*.09) + "s");
+          fw.appendChild(particle);
+        }
+      } else {
+        fw.style.width = "28px"; fw.style.height = "28px";
+        fw.style.boxShadow = "0 0 0 10px rgba(243,161,0,.2), 0 0 32px 14px rgba(243,161,0,.45)";
+      }
+      document.body.appendChild(fw);
+      setTimeout(function(){ if (fw.parentNode) fw.parentNode.removeChild(fw); }, reduced ? 900 : 1250);
+    });
+  }
+
   function points(id){
     var t = state.tries[id] || 0, m = ITEMS[id];
     if (t === 0) return m;
@@ -1221,18 +1549,18 @@ window.APP = (function(){
     logAnswer(id, resp, true, p);
     state.streak += 1; if (state.streak > state.bestStreak) state.bestStreak = state.streak;
     updateHud();
-    sparks(ev);
+    fireworks(ev);
     var msg = "<b>+" + p + " pts</b> · " + pick(PRAISE) + ", " + esc(who()) + ".";
     if (!first) msg = "<b>+" + p + " pts</b> · Lo lograste insistiendo, " + esc(who()) + ". Eso también es oficio.";
     if (state.streak === 3) msg += " Racha de 3: tienes buen ojo.";
     if (state.streak === 5) msg += " Racha de 5: ritmo de preprensista.";
     if (state.streak === 8) msg += " Racha de 8: nada se te escapa.";
-    toast(msg);
+    toast(msg, "success");
     checkRank();
     return p;
   }
 
-  function miss(id, resp){ logAnswer(id, resp, false, 0); state.tries[id] = (state.tries[id] || 0) + 1; state.streak = 0; updateHud(); }
+  function miss(id, resp){ logAnswer(id, resp, false, 0); state.tries[id] = (state.tries[id] || 0) + 1; state.streak = 0; lastMissId = id; updateHud(); state.indiciosShown = state.indiciosShown || {}; if (state.tries[id] >= INTENTOS_INDICIOS && !state.indiciosShown[id] && AYUDA[id]){ state.indiciosShown[id] = true; openHints(id, false); } }
 
   function checkRank(){
     var idx = 0;
@@ -1260,11 +1588,60 @@ window.APP = (function(){
   function renderOk(el, title, why){
     el.innerHTML = '<div class="ok"><strong>✓ ' + title + '</strong> ' + why + '</div>';
   }
+  var lastMissId = null;
   function renderRetry(el, pista, dato, ctx, extra){
+    var help = lastMissId && AYUDA[lastMissId], source = help && help.fuente && help.fuente[0];
     el.innerHTML = '<div class="retry"><p class="pausa">Aún no, pero vas por buen camino. Tómate un momento y revisa esto:</p>' +
       (extra ? '<p style="margin:0 0 6px">' + extra + '</p>' : '') +
       '<dl><dt>Pista</dt><dd>' + pista + '</dd><dt>Dato clave</dt><dd>' + dato + '</dd><dt>Contexto</dt><dd>' + ctx + '</dd></dl>' +
+      (source && $(source[0]) ? '<p class="cita"><b>Consulta la fuente del caso:</b> <a class="ref" href="#' + source[0] + '" data-ref="' + source[0] + '">' + source[1] + '</a></p>' : '') +
       '<p class="re">Vuelve a intentarlo con esa pista en mente. Cada intento te acerca.</p></div>';
+  }
+
+  var hintIndex = 0, hintId = null;
+  function renderHintStep(){
+    var cfg = AYUDA[hintId], max = Math.min(4, (cfg.ind || []).length), list = $("indList"), links = [];
+    list.innerHTML = "";
+    for (var i=0;i<hintIndex;i++){
+      var tip = i === 3 ? (cfg.finalHint || "Reúne las pistas anteriores y vuelve a los datos del caso. Explica con tus palabras cómo esos datos apoyan tu respuesta.") : cfg.ind[i];
+      var li = document.createElement("li"); li.innerHTML = tip; list.appendChild(li);
+    }
+    $("indNext").hidden = hintIndex >= max; $("indNext").textContent = hintIndex < max ? "💡 Ver el indicio " + (hintIndex + 1) : "Ya viste los indicios";
+    var src = cfg.fuente;
+    $("indCita").innerHTML = cfg.cita ? '<b>Referencia del caso:</b> «' + cfg.cita.replace(/[«»]/g, "") + '»' + (src && $(src[0]) ? ' · <a class="ref" href="#' + src[0] + '" data-ref="' + src[0] + '">' + src[1] + '</a>' : "") : "";
+    (cfg.links || []).slice(0,4).forEach(function(link){
+      var id = link[0], label = link[1];
+      if (id.indexOf("gl:") === 0) links.push('<a class="ref gl" href="#glosario" data-term="' + id.slice(3) + '">' + label + '</a>');
+      else if ($(id)) links.push('<a class="ref" href="#' + id + '" data-ref="' + id + '">' + label + '</a>');
+    });
+    (cfg.external || []).forEach(function(url, n){
+      var names = hintId === "r1" ? ["Adobe: guía de sangrado", "HEIDELBERG: imposición y papel"] : ["Adobe: PDF listo para imprimir", "Adobe: separaciones de color"];
+      links.push('<a class="ref" href="' + url + '" target="_blank" rel="noopener noreferrer">' + (names[n] || "Fuente técnica") + '</a>');
+    });
+    $("indConsulta").innerHTML = links.length ? '<b>📍 Consulta sugerida</b> ' + links.join(' · ') : "";
+    $("indIntro").textContent = "Has realizado cuatro intentos sin completar este reto. Lee cada indicio en orden; cada uno te ayuda a relacionar una parte del caso con la respuesta.";
+  }
+  function openHints(id, isReflection){
+    var cfg = AYUDA[id]; if (!cfg || !cfg.ind) return;
+    hintId = id; hintIndex = 1; renderHintStep(); openModal("indicios");
+    $("indRetry").onclick = function(){
+      closeModal($("m-indicios")); var target = isReflection ? $(id) : document.querySelector(cfg.foco);
+      if (target){ target.scrollIntoView({behavior:reduced()?"auto":"smooth",block:"center"}); target.focus(); }
+    };
+  }
+  function checkReflection(id, countAttempt){
+    var value = norm($(id).value), checks = RF_CRIT[id], list = $(id + "chk"), passed = 0, h = "";
+    checks.forEach(function(rule){ var ok = rule[0].test(value); if(ok) passed++; h += '<li class="' + (ok?"y":"n") + '">' + rule[1] + '</li>'; });
+    list.innerHTML = h;
+    var complete = passed === checks.length && $(id).value.trim().length >= 60;
+    $(id + "c").textContent = $(id).value.trim().length + " / 60 · " + (complete ? "lista completa" : (checks.length-passed) + " parte(s) por revisar");
+    if (!complete && countAttempt){
+      state.reflectionAttempts = state.reflectionAttempts || {r1:0,r2:0}; state.reflectionAttempts[id] = (state.reflectionAttempts[id] || 0) + 1;
+      state.indiciosShown = state.indiciosShown || {};
+      if (state.reflectionAttempts[id] >= INTENTOS_INDICIOS && !state.indiciosShown[id]){ state.indiciosShown[id] = true; openHints(id, true); }
+      else toast("Gracias por revisar tu respuesta. Usa los puntos pendientes como guía y conserva tus propias ideas.");
+    } else if (complete && countAttempt) toast("Tu reflexión incluye los pasos solicitados. Gracias por relacionarla con el caso.");
+    if (countAttempt) scheduleSave();
   }
 
   function giveClue(i, ev){
@@ -1286,10 +1663,7 @@ window.APP = (function(){
   }
 
   function unlock(id){
-    var s = $(id); if (!s.classList.contains("locked")) return;
-    s.classList.remove("locked");
-    s.querySelector(".st-body").removeAttribute("inert");
-    s.querySelector(".st-body").removeAttribute("aria-hidden");
+    var s = $(id); if (!s) return;
     if (!RESTORING) setTimeout(function(){ s.scrollIntoView({behavior: reduced() ? "auto" : "smooth", block:"start"}); }, 900);
   }
   function reduced(){ return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
@@ -1655,8 +2029,36 @@ window.APP = (function(){
     });
   }
   function pressFallback(){
-    var l = $("pressLoad"); if (l) l.textContent = "";
-    $("pressWrap").hidden = true; $("offsetSvg").hidden = false;
+    var l = $("pressLoad"), svg = $("offsetSvg").querySelector("svg");
+    if (press && press.fallback) return;
+    if (press) press.fallback = true;
+    if (l) l.textContent = "El visor 3D no está disponible en este dispositivo. Aquí continúa una animación 2D del proceso.";
+    $("offsetSvg").hidden = false;
+    var playing = !reduced();
+    function setPlaying(on){
+      playing = on;
+      try { if (playing && svg.unpauseAnimations) svg.unpauseAnimations(); else if (!playing && svg.pauseAnimations) svg.pauseAnimations(); } catch(e){}
+      $("pressPlay").textContent = playing ? "Pausar animación" : "Reproducir animación";
+      $("pressPlay").setAttribute("aria-pressed", String(playing));
+    }
+    setPlaying(playing);
+    $("pressPlay").onclick = function(){ setPlaying(!playing); };
+    [].forEach.call(document.querySelectorAll("#pressMode button"), function(b){
+      b.onclick = function(){
+        var four = b.getAttribute("data-mode") === "4";
+        [].forEach.call(document.querySelectorAll("#pressMode button"), function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+        $("pressInfo").innerHTML = four ? PRESS_INFO.cmyk : PRESS_INFO.inicio;
+        if (four) pressMark("cmyk", null);
+      };
+    });
+    [].forEach.call(document.querySelectorAll("#pressSteps button"), function(b){
+      b.onclick = function(ev){
+        var k = b.getAttribute("data-step");
+        [].forEach.call(document.querySelectorAll("#pressSteps button"), function(x){ x.setAttribute("aria-pressed", String(x === b)); });
+        $("pressInfo").innerHTML = PRESS_INFO[k] || PRESS_INFO.inicio;
+        pressMark(k, ev);
+      };
+    });
   }
   function renderPressSeen(){
     var seen = state.pressSeen || {}, h = "", n = 0;
@@ -1674,6 +2076,36 @@ window.APP = (function(){
     scheduleSave();
   }
 
+  /* Anime.js mejora los movimientos, pero no es requisito para que funcione la prensa 3D. */
+  function localTween(opts){
+    var target = opts.targets, duration = Math.max(1, opts.duration || 400), props = [], elapsed = 0, started = 0, raf = 0, running = false, lastLoop = 0;
+    Object.keys(opts).forEach(function(k){ if (["targets","duration","easing","loop","autoplay","direction","loopBegin","update","complete"].indexOf(k) < 0 && typeof opts[k] !== "function") props.push(k); });
+    function ease(t){ if (opts.easing === "linear") return t; if (opts.easing === "easeInOutQuad") return t < .5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2; return -(Math.cos(Math.PI*t)-1)/2; }
+    function draw(p){
+      var vals = {};
+      props.forEach(function(k){
+        var frames = Array.isArray(opts[k]) ? opts[k] : [target[k], opts[k]], seg = p * (frames.length - 1), ix = Math.min(frames.length - 2, Math.floor(seg)), q = ease(seg - ix);
+        vals[k] = frames[ix] + (frames[ix+1] - frames[ix]) * q; target[k] = vals[k];
+      });
+      if (opts.update) opts.update({progress:p*100,animatables:[{target:target}], tweens:[]});
+    }
+    function frame(now){
+      if (!running) return;
+      elapsed = Math.max(0, now - started);
+      var loopNo = Math.floor(elapsed / duration), p = (elapsed % duration) / duration;
+      if (opts.loop && loopNo > lastLoop){ lastLoop = loopNo; if (opts.loopBegin) opts.loopBegin(); }
+      if (!opts.loop && elapsed >= duration) p = 1;
+      if (opts.direction === "alternate" && loopNo % 2) p = 1 - p;
+      draw(p);
+      if (!opts.loop && elapsed >= duration){ running = false; raf = 0; if (opts.complete) opts.complete(); return; }
+      raf = requestAnimationFrame(frame);
+    }
+    var api = {pause:function(){ if (!running) return api; running = false; cancelAnimationFrame(raf); raf = 0; return api; }, play:function(){ if (running) return api; running = true; started = performance.now() - elapsed; raf = requestAnimationFrame(frame); return api; }};
+    if (opts.autoplay !== false) api.play();
+    return api;
+  }
+  localTween.random = function(min,max){ return Math.floor(Math.random() * (max-min+1)) + min; };
+
   function initPress(){
     if (press) return;
     press = {ready:false};
@@ -1683,7 +2115,8 @@ window.APP = (function(){
     if (!ok3d) return pressFallback();
     var a = window.THREE ? Promise.resolve() : loadScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js");
     var b = window.anime ? Promise.resolve() : loadScript("https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js");
-    Promise.all([a, b]).then(function(){ try { buildPress(); } catch(e){ pressFallback(); } }, pressFallback);
+    b = b.catch(function(){ return null; });
+    Promise.all([a, b]).then(function(){ try { if (!window.THREE) throw new Error("Three.js no disponible"); if (!window.anime) window.anime = localTween; buildPress(); } catch(e){ pressFallback(); } }, pressFallback);
   }
 
   function buildPress(){
@@ -1696,6 +2129,7 @@ window.APP = (function(){
     renderer.setSize(W, H);
     box.insertBefore(renderer.domElement, box.firstChild);
     $("pressLoad").textContent = "";
+    $("offsetSvg").hidden = true;
 
     var scene = new T.Scene();
     var camera = new T.PerspectiveCamera(40, W / H, 0.1, 100);
@@ -2118,7 +2552,7 @@ window.APP = (function(){
   function initS3(){
     var h = "";
     SIM.forEach(function(s, i){
-      h += '<div class="step' + (i ? " wait" : "") + '" id="step-' + s.id + '"><div class="sh"><i>' + (i+1) + '</i><span>' + s.title + '</span></div>' +
+      h += '<div class="step" id="step-' + s.id + '"><div class="sh"><i>' + (i+1) + '</i><span>' + s.title + '</span></div>' +
         '<p style="margin:8px 0 0">' + s.q + '</p><div class="guide">' + s.guide + '</div>' +
         '<div class="helps"><button class="btn btn-outline btn-sm" type="button" data-sketch="' + s.id + '" aria-expanded="false">📝 Esquema en papel</button><button class="btn btn-outline btn-sm" type="button" data-xl="' + s.id + '">📊 Fórmula de Excel</button></div>' +
         '<div class="sketch" id="sk-' + s.id + '" hidden></div><div class="ans">';
@@ -2300,8 +2734,12 @@ window.APP = (function(){
       $(id).addEventListener("input", function(){
         state[id] = this.value; scheduleSave();
         var n = this.value.trim().length; $(id + "c").textContent = n + " / 60";
+        checkReflection(id, false);
         if (n >= 60 && !praised){ praised = true; toast("Buena reflexión: escribir lo que aprendiste lo fija en la memoria."); }
       });
+    });
+    [].forEach.call(document.querySelectorAll("[data-reflection-check]"), function(b){
+      b.addEventListener("click", function(){ checkReflection(b.getAttribute("data-reflection-check"), true); });
     });
     [].forEach.call($("tick").querySelectorAll("button"), function(b){
       b.addEventListener("click", function(ev){
@@ -2365,13 +2803,14 @@ window.APP = (function(){
   function initModals(){
     [].forEach.call(document.querySelectorAll("[data-open]"), function(b){ b.addEventListener("click", function(){ openModal(b.getAttribute("data-open")); }); });
     $("btnMapa").addEventListener("click", function(){ openModal("mapa"); });
+    $("indNext").addEventListener("click", function(){ if (!hintId) return; hintIndex = Math.min(4, hintIndex + 1); renderHintStep(); if (this.hidden) $("indRetry").focus(); else this.focus(); });
     [].forEach.call(document.querySelectorAll(".modal-bg"), function(m){
       m.addEventListener("click", function(e){ if (e.target === m) closeModal(m); });
       m.querySelector("[data-close]").addEventListener("click", function(){ closeModal(m); });
       m.addEventListener("keydown", function(e){
         if (e.key === "Escape") closeModal(m);
         if (e.key === "Tab"){
-          var f = [].filter.call(m.querySelectorAll("button,input,a[href]"), function(x){ return x.offsetParent !== null; });
+          var f = [].filter.call(m.querySelectorAll("button,input,textarea,select,a[href],[tabindex]:not([tabindex='-1'])"), function(x){ return x.offsetParent !== null && !x.disabled; });
           if (!f.length) return;
           if (e.shiftKey && document.activeElement === f[0]){ e.preventDefault(); f[f.length-1].focus(); }
           else if (!e.shiftKey && document.activeElement === f[f.length-1]){ e.preventDefault(); f[0].focus(); }
@@ -2705,9 +3144,65 @@ window.APP = (function(){
   }
 
   /* ================= INIT ================= */
+  function initLearningScaffolds(){
+    var memories = {
+      s1:"Mira primero qué ocurrió en el caso; separa los datos que observas de las posibles causas.",
+      s2:"Antes de entregar un archivo, vuelve a revisar formato, resolución, tamaño, legibilidad, nombre y contenido.",
+      sA:"Para nombrar el archivo, comprueba cada parte del patrón y la extensión antes de continuar.",
+      sB:"Recuerda el recorrido del trabajo: preprensa prepara, CTP graba las planchas, prensa imprime y acabados terminan la pieza.",
+      s3:"Al calcular el pliego, descuenta primero la pinza y el sangrado; compara las dos orientaciones antes de elegir.",
+      s4:"Relaciona cada término con la acción que viste en el taller; después explica para qué sirve en este encargo.",
+      s5:"Cierra conectando una decisión del caso con lo que harías en tu propia pieza y por qué."
+    };
+    var sections = document.querySelectorAll("section.st");
+    Array.prototype.forEach.call(sections, function(section){
+      var head = section.querySelector(".st-head"), id = section.id;
+      if (head && !section.querySelector(".st-memory")) {
+        var memory = document.createElement("aside"); memory.className = "st-memory";
+        memory.innerHTML = "<b>🔁 Recuerda el procedimiento</b><span>" + (memories[id] || "Lee el caso, consulta el apoyo disponible, responde el reto y revisa la retroalimentación.") + "</span>";
+        memory.setAttribute("aria-label", "Recordatorio de aprendizaje");
+        head.parentNode.insertBefore(memory, head.nextSibling);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".ans"), function(answer){
+      if (answer.querySelector(".btn-primary") && !answer.querySelector(".eval-marker")) {
+        var marker = document.createElement("span"); marker.className = "eval-marker";
+        marker.textContent = "🟠 Reto puntuado · cada acierto suma";
+        answer.classList.add("scored"); answer.insertBefore(marker, answer.firstChild);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".ana"), function(card){
+      var row = card.querySelector(".row"), button = row && row.querySelector('[data-act="ok"]');
+      if (button && !row.querySelector(".eval-marker")) {
+        var marker = document.createElement("span"); marker.className = "eval-marker";
+        marker.textContent = "🟠 Reto puntuado · cada acierto suma"; row.insertBefore(marker, row.firstChild);
+      }
+    });
+    var scoredGroups = ["#hipOpts", ".match", "#tick"];
+    scoredGroups.forEach(function(selector){
+      var group = document.querySelector(selector);
+      if (group && !group.querySelector(".eval-marker")) {
+        var marker = document.createElement("span"); marker.className = "eval-marker";
+        marker.textContent = "🟠 Reto puntuado · cada acierto suma";
+        group.parentNode.insertBefore(marker, group);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".ev"), function(card){
+      if (!card.querySelector(".eval-marker")) {
+        var marker = document.createElement("span"); marker.className = "eval-marker";
+        marker.textContent = "🟠 Pregunta evaluada · suma puntos"; card.insertBefore(marker, card.firstChild);
+      }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".howto,.guide,.clue,.consulta"), function(support){
+      if (support.querySelector(".support-marker")) return;
+      var marker = document.createElement("span"); marker.className = "support-marker";
+      marker.textContent = "🔵 Apoyo para aprender · no suma ni resta puntos";
+      support.insertBefore(marker, support.firstChild);
+    });
+  }
+
   function init(){
-    [].forEach.call(document.querySelectorAll("section.st.locked .st-body"), function(b){ b.setAttribute("inert",""); b.setAttribute("aria-hidden","true"); });
-    initStart(); initS1(); initS2(); initA(); initB(); initS3(); initS4(); initS5(); initModals(); initReport(); initAyudas(); offerResume();
+    initStart(); initS1(); initS2(); initA(); initB(); initPress(); initS3(); initS4(); initS5(); initModals(); initReport(); initAyudas(); initLearningScaffolds(); offerResume();
     updateHud(); checkRank(); renderFlow();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
